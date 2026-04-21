@@ -10,24 +10,16 @@
         :root { --font-header: 'Martel', serif; --font-body: 'Mulish', sans-serif; }
         body {
             background: #0f172a linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
-                        url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
+                        url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover; font-family: var(--font-body); color: #f8fafc;
         }
         .glass-card { background: rgba(255, 255, 255, 0.98); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: #1e293b; }
-        
         #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1001; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #1e293b; }
         #sidebar.active { left: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; }
         .overlay.active { display: block; }
-        
-        .skeleton { background: #e2e8f0; animation: pulse 1.5s infinite; height: 20px; border-radius: 4px; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .animate-slideUp { animation: slideUp 0.3s ease-out; }
-
-        /* Custom Search Styling */
-        .search-input { border: 2px solid transparent; transition: all 0.2s; }
-        .search-input:focus { border-color: #eab308; background: white; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -38,83 +30,70 @@
 
     <div id="sidebar" class="flex flex-col shadow-2xl">
         <div class="p-8 flex flex-col items-center border-b border-gray-100">
-            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-16 mb-4">
             <h2 style="font-family: var(--font-header);" class="text-blue-900 font-black uppercase text-xs text-center tracking-tighter">Jejak Imani<br>Operational</h2>
         </div>
         <div class="p-3 space-y-1 overflow-y-auto">
-            <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-blue-900">🏠 Dashboard Utama</button>
-            <button onclick="changeSheet('CHECKLIST PERLENGKAPAN'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📋 Perlengkapan</button>
-            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📦 Logistik Kamar</button>
-            <button onclick="changeSheet('ROOMLIST'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">👥 Roomlist</button>
-            <button onclick="changeSheet('KEGIATAN'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📅 Jadwal Kegiatan</button>
+            <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs text-blue-900 uppercase tracking-widest">🏠 Dashboard</button>
+            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs text-gray-600 uppercase tracking-widest">📦 Logistik Kamar</button>
         </div>
     </div>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
-    <div class="max-w-4xl mx-auto px-4 pt-24 pb-24">
-        <div class="text-center mb-8">
-            <h1 id="pageTitle" class="text-3xl font-black uppercase italic tracking-tighter text-white" style="font-family: var(--font-header);">Dashboard</h1>
-            <div id="statusBadge" class="inline-block mt-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Menghubungkan...</div>
-        </div>
+    <div class="max-w-4xl mx-auto px-4 pt-24 pb-24 text-center">
+        <h1 id="pageTitle" class="text-3xl font-black uppercase italic tracking-tighter text-white mb-2" style="font-family: var(--font-header);">Dashboard</h1>
+        <div id="statusBadge" class="inline-block mb-8 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Syncing...</div>
 
         <div id="filterBar" class="hidden space-y-3 mb-8">
             <div class="flex gap-2">
-                <input type="text" id="searchKamar" oninput="applyFilters()" placeholder="Cari No. Kamar..." class="search-input flex-1 p-4 rounded-2xl bg-white/95 text-blue-900 font-bold text-sm shadow-xl outline-none">
-                <select id="filterHotel" onchange="applyFilters()" class="p-4 rounded-2xl bg-white/95 text-blue-900 font-bold text-xs shadow-xl outline-none border-none">
-                    <option value="">Semua Hotel</option>
-                    <option value="Makkah">Makkah</option>
-                    <option value="Madinah">Madinah</option>
-                    <option value="Transit">Transit</option>
+                <input type="text" id="searchKamar" oninput="applyFilters()" placeholder="No. Kamar..." class="flex-1 p-4 rounded-2xl bg-white text-blue-900 font-bold text-sm shadow-xl outline-none">
+                <select id="filterStatus" onchange="applyFilters()" class="p-4 rounded-2xl bg-white text-blue-900 font-bold text-xs shadow-xl outline-none border-none">
+                    <option value="">Semua Status</option>
+                    <option value="Belum">Belum</option>
+                    <option value="Proses">Proses</option>
+                    <option value="Lengkap">Lengkap</option>
+                    <option value="Perlu Refill">Perlu Refill 🔴</option>
                 </select>
             </div>
-            <select id="filterStatus" onchange="applyFilters()" class="w-full p-4 rounded-2xl bg-white/95 text-blue-900 font-bold text-xs shadow-xl outline-none border-none">
-                <option value="">Semua Status Logistik</option>
-                <option value="Belum">Belum Diisi</option>
-                <option value="Proses">Dalam Proses</option>
-                <option value="Lengkap">Lengkap</option>
-            </select>
         </div>
 
         <div id="dynamicContent" class="grid grid-cols-1 gap-4"></div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzp7amkhNZEcIW8Pc3gYpwnOolAMQjoA4-GudAobmE8kj31XxTV1dhL16INmZuY2ixTxA/exec"; 
-        let appData = JSON.parse(localStorage.getItem('hajiData')) || null;
-        let activeSheetName = "Dashboard";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyIvXmJMUsKDkQASjwdacvOgi6B8WRy_w3qePVlnNEUkoGaiVA8cJ31uRg_frJ7ugVQ5w/exec"; 
+        const SOP_ITEMS = [
+            "Ajwa Almadina Malaki", "Alkhair Chai Karak Cardamom teh tarik", "Alkhair Chai Karak Ginger", "Amada Cokelat Mood Dark",
+            "Baja Cashew", "Baja Deluxe Mix", "Baja Extra Mix", "Baja Peanuts", "Baja Sweet & Salty Mix", "Basket Fruits",
+            "Bounty Chocolate Coconuts 28.5gr", "Chiki Batal Cheese", "Chiki Batal Pop Corn Caramel", "Chiki Batal Yogurt",
+            "Chiki XL Cheese", "Cornitos Nacho Crisps", "Harvest Coconut Water", "Juice Almarai Manggo 200ml", "Juice Almarai Mix Fruits 200ml",
+            "Juice Almarai Orange 200ml", "Kinza Soda Citrus", "Memories Joy Cocoa Cream Wafers", "Pop Mie mix", "Pronto",
+            "Ritz Crackers Original", "Sukkari Arjoon", "Susu Almarai Caramel 225ml", "Susu Almarai Cokelat 225ml", "Susu Almarai Manggo 225ml",
+            "Susu Almarai Strawberry 225ml", "Tiffany Break Waffer Crunchy", "Ulker Cikolata Cokelat Dubai", "Ulker Napoliten Milk Chocolate",
+            "Zamzam 5 liter", "Barari Tea", "Kopi Baja Classic Coffee Mild", "Madu Kalina 250gr", "Gula Stevia Tropicana Slim",
+            "Gula Tropicana Slim Low Calories", "Sendok Teh", "Gelas Kertas"
+        ];
 
-        function toggleSidebar() { 
-            document.getElementById('sidebar').classList.toggle('active'); 
-            document.querySelector('.overlay').classList.toggle('active'); 
-        }
+        let appData = null;
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
 
         async function init() {
-            if(appData) { renderDashboard(); } else { showLoading(); }
             try {
                 const res = await fetch(API_URL);
-                const json = await res.json();
-                appData = json;
-                localStorage.setItem('hajiData', JSON.stringify(json));
+                appData = await res.json();
                 document.getElementById('statusBadge').innerText = "Data Live Sync";
-                document.getElementById('statusBadge').classList.replace('text-yellow-400', 'text-green-400');
-                if(activeSheetName === "Dashboard") renderDashboard();
-            } catch (e) { document.getElementById('statusBadge').innerText = "Offline Mode"; }
+                document.getElementById('statusBadge').className = "inline-block mb-8 px-3 py-1 bg-green-500/20 rounded-full text-[10px] font-bold uppercase tracking-widest text-green-400";
+                showDashboard();
+            } catch (e) { document.getElementById('statusBadge').innerText = "Koneksi Error"; }
         }
 
-        function showLoading() {
-            document.getElementById('dynamicContent').innerHTML = Array(4).fill(0).map(() => `<div class="glass-card p-6 space-y-3"><div class="skeleton w-1/2"></div><div class="skeleton w-full"></div></div>`).join('');
-        }
-
-        function renderDashboard() {
-            activeSheetName = "Dashboard";
+        function showDashboard() {
             document.getElementById('pageTitle').innerText = "Dashboard";
             document.getElementById('filterBar').classList.add('hidden');
             let html = ``;
-            if(!appData) return;
             for (const name in appData) {
-                html += `
-                <div onclick="changeSheet('${name}')" class="glass-card p-6 flex justify-between items-center cursor-pointer active:scale-95 transition-transform">
-                    <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3></div>
+                html += `<div onclick="changeSheet('${name}')" class="glass-card p-6 flex justify-between items-center cursor-pointer active:scale-95 transition-transform">
+                    <div class="text-left"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3></div>
                     <div class="text-blue-900"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
                 </div>`;
             }
@@ -122,56 +101,42 @@
         }
 
         function changeSheet(name) {
-            activeSheetName = name;
             document.getElementById('pageTitle').innerText = name;
-            const rows = appData ? appData[name] : [];
-            
             if (name === "LOGISTIK KAMAR") {
                 document.getElementById('filterBar').classList.remove('hidden');
                 applyFilters();
             } else {
                 document.getElementById('filterBar').classList.add('hidden');
-                if(!rows || rows.length === 0) { 
-                    document.getElementById('dynamicContent').innerHTML = `<div class="text-white text-center py-20 font-bold">Data ${name} tidak ditemukan.</div>`;
-                    return; 
-                }
-                renderDefaultTable(rows);
+                renderDefaultTable(appData[name]);
             }
         }
 
         function applyFilters() {
             const query = document.getElementById('searchKamar').value.toLowerCase();
-            const hotel = document.getElementById('filterHotel').value;
             const status = document.getElementById('filterStatus').value;
-            const allRows = appData["LOGISTIK KAMAR"] || [];
-
-            const filtered = allRows.filter(r => {
-                const matchKamar = r['Nomor Kamar']?.toString().toLowerCase().includes(query);
-                const matchHotel = !hotel || r['Hotel'] === hotel;
+            const filtered = appData["LOGISTIK KAMAR"].filter(r => {
+                const matchKamar = r['Nomor Kamar'].toString().toLowerCase().includes(query);
                 const matchStatus = !status || r['Status'] === status;
-                return matchKamar && matchHotel && matchStatus;
+                return matchKamar && matchStatus;
             });
-
             renderLogistikGrid(filtered);
         }
 
         function renderLogistikGrid(rows) {
             let html = `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">`;
-            if(rows.length === 0) {
-                html = `<div class="col-span-full py-20 text-center text-white/50 font-bold italic">Kamar tidak ditemukan...</div>`;
-            } else {
-                rows.forEach(row => {
-                    const statusColor = row['Status'] === "Lengkap" ? "border-green-500 bg-green-50" : "border-gray-200";
-                    html += `
-                    <div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status'] || ''}', '${row['Catatan'] || ''}')" 
-                         class="glass-card p-4 border-2 ${statusColor} cursor-pointer active:scale-95 transition-all">
-                        <p class="text-[8px] font-bold text-blue-400 uppercase text-left">${row['Hotel']}</p>
-                        <h3 class="text-lg font-black text-blue-900 text-left leading-tight">Kamar ${row['Nomor Kamar']}</h3>
-                        <p class="text-[9px] text-gray-400 mt-2 font-bold uppercase text-left tracking-tighter">${row['Status'] || 'Pending'}</p>
-                    </div>`;
-                });
-            }
-            document.getElementById('dynamicContent').innerHTML = html + (rows.length > 0 ? `</div>` : ``);
+            rows.forEach(row => {
+                let bgColor = "bg-white";
+                if(row['Status'] === "Perlu Refill") bgColor = "bg-red-50 border-red-500 animate-pulse";
+                else if(row['Status'] === "Lengkap") bgColor = "bg-green-50 border-green-500";
+
+                html += `<div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status']}', '${row['Catatan']}')" 
+                     class="glass-card p-4 border-2 ${bgColor} cursor-pointer active:scale-95 transition-all text-left">
+                    <p class="text-[8px] font-bold text-blue-400 uppercase">${row['Hotel']}</p>
+                    <h3 class="text-lg font-black text-blue-900">Kamar ${row['Nomor Kamar']}</h3>
+                    <p class="text-[9px] text-gray-400 mt-2 font-bold uppercase">${row['Status'] || 'Pending'}</p>
+                </div>`;
+            });
+            document.getElementById('dynamicContent').innerHTML = html + `</div>`;
         }
 
         function openModalLogistik(noKamar, hotel, currentStatus, currentCatatan) {
@@ -180,25 +145,33 @@
                 <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
                 <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp">
                     <div class="p-6 bg-blue-900 text-white flex justify-between items-center">
-                        <div><h2 class="text-xl font-black italic">Kamar ${noKamar}</h2><p class="text-[10px] uppercase opacity-70">${hotel}</p></div>
+                        <div class="text-left"><h2 class="text-xl font-black italic">Kamar ${noKamar}</h2><p class="text-[10px] uppercase opacity-70">${hotel}</p></div>
                         <button onclick="closeModal()" class="text-2xl font-bold">×</button>
                     </div>
-                    <div class="p-6 overflow-y-auto space-y-5 text-left bg-white">
+                    <div class="p-6 overflow-y-auto bg-white text-left space-y-4">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">SOP Checklist (41 Item)</p>
+                        <div class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 rounded-xl">
+                            ${SOP_ITEMS.map(item => `
+                                <label class="flex items-center gap-3 p-2 hover:bg-white rounded transition-colors">
+                                    <input type="checkbox" class="w-4 h-4 rounded text-blue-900 border-gray-300">
+                                    <span class="text-[11px] font-bold text-gray-700">${item}</span>
+                                </label>
+                            `).join('')}
+                        </div>
                         <div>
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Update Status</label>
-                            <select id="updateStatus" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl font-bold text-blue-900 focus:ring-2 ring-yellow-500 outline-none">
+                            <label class="text-[10px] font-black text-gray-400 uppercase">Update Status</label>
+                            <select id="updateStatus" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl font-bold text-blue-900">
                                 <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Diisi</option>
                                 <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>Dalam Proses</option>
                                 <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>Lengkap (Sesuai SOP)</option>
+                                <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>Perlu Refill 🔴</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Catatan Kekurangan</label>
-                            <textarea id="updateCatatan" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl text-sm focus:ring-2 ring-yellow-500 outline-none" rows="3" placeholder="Contoh: Kurma habis...">${currentCatatan}</textarea>
+                            <label class="text-[10px] font-black text-gray-400 uppercase">Catatan</label>
+                            <textarea id="updateCatatan" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl text-xs" rows="2">${currentCatatan}</textarea>
                         </div>
-                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="w-full py-4 bg-yellow-500 text-blue-950 font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all">
-                            SIMPAN KE SPREADSHEET
-                        </button>
+                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="w-full py-4 bg-yellow-500 text-blue-950 font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all">SIMPAN PERUBAHAN</button>
                     </div>
                 </div>
             </div>`;
@@ -210,36 +183,13 @@
             const status = document.getElementById('updateStatus').value;
             const catatan = document.getElementById('updateCatatan').value;
             btn.innerText = "MENGIRIM..."; btn.disabled = true;
-
             try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan })
-                });
-                alert("Data Kamar " + noKamar + " Berhasil Dikirim!");
-                closeModal();
-                init(); 
-            } catch (e) { alert("Error: " + e.message); } 
-            finally { btn.innerText = "SIMPAN KE SPREADSHEET"; btn.disabled = false; }
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan }) });
+                alert("Berhasil!"); closeModal(); init();
+            } catch (e) { alert("Gagal kirim"); } finally { btn.innerText = "SIMPAN PERUBAHAN"; btn.disabled = false; }
         }
 
         function closeModal() { const m = document.getElementById('modalLogistik'); if(m) m.remove(); }
-
-        function renderDefaultTable(rows) {
-            let html = `<div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse">`;
-            html += `<thead class="bg-gray-50 border-b"><tr>`;
-            Object.keys(rows[0]).forEach(h => html += `<th class="px-4 py-3 font-bold text-blue-900 uppercase tracking-tighter">${h}</th>`);
-            html += `</tr></thead><tbody class="divide-y divide-gray-50">`;
-            rows.forEach(row => {
-                html += `<tr>`;
-                Object.values(row).forEach(v => html += `<td class="px-4 py-4 text-gray-600 font-medium">${v}</td>`);
-                html += `</tr>`;
-            });
-            document.getElementById('dynamicContent').innerHTML = html + `</tbody></table></div></div>`;
-        }
-
-        function showDashboard() { renderDashboard(); }
         init();
     </script>
 </body>
