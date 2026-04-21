@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handling Haji Jejak Imani 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://drive.google.com/uc?export=view&id=1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-bottom: 2rem;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        /* Style khusus untuk tabel agar mudah dibaca di HP */
+        .table-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-10 text-gray-800">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col items-center mb-10">
+            <img src="https://drive.google.com/uc?export=view&id=1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-24 md:h-32 mb-6 drop-shadow-xl">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white text-center drop-shadow-lg uppercase tracking-wider">
+                Handling Saudi Haji 2026
+            </h1>
+            <div class="h-1 w-24 bg-yellow-400 mt-4 rounded-full shadow-lg"></div>
+        </div>
+
+        <div class="glass-card p-4 flex items-center gap-4 mb-8">
+            <span class="text-blue-800 font-bold">CARI:</span>
+            <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Ketik nama jamaah atau nomor kamar..." 
+                   class="flex-1 bg-transparent border-b-2 border-blue-200 focus:border-blue-600 outline-none p-2 transition-all">
+        </div>
+
+        <div id="app" class="space-y-4">
+            <div class="text-center py-20 text-white font-bold animate-bounce">
+                MENGHUBUNGKAN KE SERVER DATABASE...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwYiG0qK-7OsoXutkcdkJ64bltUdM0RWg0-54r3-800xHO6XSzK8Jo-7wuvx8mWC7xbcA/exec";
+        let rawData = {};
+
+        async function fetchData() {
+            try {
+                const response = await fetch(API_URL);
+                rawData = await response.json();
+                renderData(rawData);
+            } catch (error) {
+                document.getElementById('app').innerHTML = `
+                    <div class="glass-card p-10 text-center">
+                        <p class="text-red-600 font-bold text-xl">⚠️ KONEKSI GAGAL</p>
+                        <p class="text-gray-600 mt-2">Pastikan Deploy Apps Script Anda sudah benar.</p>
+                    </div>`;
+            }
+        }
+
+        function renderData(data) {
+            const container = document.getElementById('app');
+            container.innerHTML = '';
+
+            for (const [sheetName, rows] of Object.entries(data)) {
+                let tableHTML = `
+                    <div class="glass-card overflow-hidden data-section">
+                        <div class="bg-blue-900 px-6 py-4 flex justify-between items-center">
+                            <h2 class="text-white font-bold text-lg tracking-widest uppercase">${sheetName}</h2>
+                            <span class="text-blue-200 text-xs">${rows.length} Data</span>
+                        </div>
+                        <div class="table-container overflow-x-auto p-4">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead>
+                                    <tr class="text-blue-900 border-b-2 border-blue-100 italic">
+                                        ${Object.keys(rows[0] || {}).map(h => `<th class='px-4 py-3 font-bold'>${h}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    ${rows.map(row => `
+                                        <tr class="hover:bg-blue-50/80 transition-all row-item">
+                                            ${Object.values(row).map(v => `<td class="px-4 py-3 text-gray-700 font-medium">${formatValue(v)}</td>`).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += tableHTML;
+            }
+        }
+
+        function formatValue(val) {
+            const v = String(val).trim();
+            if (["READY", "SUDAH", "TERSEDIA", "SELESAI"].includes(v.toUpperCase())) {
+                return `<span class="bg-green-600 text-white status-badge">${v}</span>`;
+            }
+            if (["BELUM", "PENDING", "PROSES", "KOSONG"].includes(v.toUpperCase())) {
+                return `<span class="bg-amber-500 text-white status-badge">${v}</span>`;
+            }
+            return v;
+        }
+
+        function filterData() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.querySelectorAll(".row-item");
+            
+            rows.forEach(row => {
+                let text = row.textContent.toUpperCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
