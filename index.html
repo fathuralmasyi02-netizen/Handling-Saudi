@@ -14,35 +14,36 @@
             background-size: cover; font-family: var(--font-body); color: #f8fafc;
         }
         .glass-card { background: rgba(255, 255, 255, 0.98); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: #1e293b; }
-        #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #1e293b; }
+        
+        /* Sidebar Fix */
+        #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1001; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #1e293b; }
         #sidebar.active { left: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; }
         .overlay.active { display: block; }
+        
         .skeleton { background: #e2e8f0; animation: pulse 1.5s infinite; height: 20px; border-radius: 4px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        
-        /* Animasi Popup */
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .animate-slideUp { animation: slideUp 0.3s ease-out; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1001] bg-yellow-500 text-blue-950 p-3 rounded-full shadow-2xl active:scale-90 transition-transform">
+    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] bg-yellow-500 text-blue-950 p-3 rounded-full shadow-2xl active:scale-90 transition-transform">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
     </button>
 
-    <div id="sidebar">
+    <div id="sidebar" class="flex flex-col shadow-2xl">
         <div class="p-8 flex flex-col items-center border-b border-gray-100">
             <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-16 mb-4">
             <h2 style="font-family: var(--font-header);" class="text-blue-900 font-black uppercase text-xs text-center tracking-tighter">Jejak Imani<br>Operational</h2>
         </div>
-        <div class="p-3 space-y-1">
+        <div class="p-3 space-y-1 overflow-y-auto">
             <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-blue-900">🏠 Dashboard Utama</button>
-            <button onclick="changeSheet('CHECKLIST PERLENGKAPAN')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📋 Perlengkapan</button>
-            <button onclick="changeSheet('LOGISTIK KAMAR')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📦 Logistik Kamar</button>
-            <button onclick="changeSheet('ROOMLIST')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">👥 Roomlist</button>
-            <button onclick="changeSheet('KEGIATAN')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📅 Jadwal Kegiatan</button>
+            <button onclick="changeSheet('CHECKLIST PERLENGKAPAN'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📋 Perlengkapan</button>
+            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📦 Logistik Kamar</button>
+            <button onclick="changeSheet('ROOMLIST'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">👥 Roomlist</button>
+            <button onclick="changeSheet('KEGIATAN'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📅 Jadwal Kegiatan</button>
         </div>
     </div>
     <div class="overlay" onclick="toggleSidebar()"></div>
@@ -50,17 +51,19 @@
     <div class="max-w-4xl mx-auto px-4 pt-24 pb-24">
         <div class="text-center mb-8">
             <h1 id="pageTitle" class="text-3xl font-black uppercase italic tracking-tighter text-white" style="font-family: var(--font-header);">Dashboard</h1>
-            <div id="statusBadge" class="inline-block mt-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Offline Mode</div>
+            <div id="statusBadge" class="inline-block mt-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Menghubungkan...</div>
         </div>
         <div id="dynamicContent" class="grid grid-cols-1 gap-4"></div>
     </div>
 
     <script>
-        // PASTIKAN URL INI ADALAH HASIL NEW DEPLOYMENT DENGAN FUNGSI DOPost
         const API_URL = "https://script.google.com/macros/s/AKfycbzp7amkhNZEcIW8Pc3gYpwnOolAMQjoA4-GudAobmE8kj31XxTV1dhL16INmZuY2ixTxA/exec"; 
         let appData = JSON.parse(localStorage.getItem('hajiData')) || null;
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
+        function toggleSidebar() { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+            document.querySelector('.overlay').classList.toggle('active'); 
+        }
 
         async function init() {
             if(appData) { renderDashboard(); } else { showLoading(); }
@@ -72,7 +75,9 @@
                 document.getElementById('statusBadge').innerText = "Data Live Sync";
                 document.getElementById('statusBadge').classList.replace('text-yellow-400', 'text-green-400');
                 if(document.getElementById('pageTitle').innerText === "Dashboard") renderDashboard();
-            } catch (e) { console.error("Sync gagal."); }
+            } catch (e) { 
+                document.getElementById('statusBadge').innerText = "Offline Mode"; 
+            }
         }
 
         function showLoading() {
@@ -82,16 +87,12 @@
         function renderDashboard() {
             document.getElementById('pageTitle').innerText = "Dashboard";
             let html = ``;
+            if(!appData) return;
             for (const name in appData) {
                 html += `
                 <div onclick="changeSheet('${name}')" class="glass-card p-6 flex justify-between items-center cursor-pointer active:scale-95 transition-transform">
-                    <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p>
-                        <h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3>
-                    </div>
-                    <div class="text-blue-900">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </div>
+                    <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3></div>
+                    <div class="text-blue-900"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
                 </div>`;
             }
             document.getElementById('dynamicContent').innerHTML = html;
@@ -100,13 +101,12 @@
         function changeSheet(name) {
             document.getElementById('pageTitle').innerText = name;
             const rows = appData ? appData[name] : [];
-            if(!rows || rows.length === 0) { showLoading(); return; }
-            
-            if (name === "LOGISTIK KAMAR") {
-                renderLogistikGrid(rows);
-            } else {
-                renderDefaultTable(rows);
+            if(!rows || rows.length === 0) { 
+                document.getElementById('dynamicContent').innerHTML = `<div class="text-white text-center py-20 font-bold">Data ${name} tidak ditemukan.</div>`;
+                return; 
             }
+            if (name === "LOGISTIK KAMAR") { renderLogistikGrid(rows); } 
+            else { renderDefaultTable(rows); }
         }
 
         function renderLogistikGrid(rows) {
@@ -116,9 +116,9 @@
                 html += `
                 <div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status'] || ''}', '${row['Catatan'] || ''}')" 
                      class="glass-card p-4 border-2 ${statusColor} cursor-pointer active:scale-95 transition-all">
-                    <p class="text-[8px] font-bold text-blue-400 uppercase">${row['Hotel']}</p>
-                    <h3 class="text-lg font-black text-blue-900">Kamar ${row['Nomor Kamar']}</h3>
-                    <p class="text-[9px] text-gray-400 mt-1 font-bold">${row['Status'] || 'Pending'}</p>
+                    <p class="text-[8px] font-bold text-blue-400 uppercase text-left">${row['Hotel']}</p>
+                    <h3 class="text-lg font-black text-blue-900 text-left leading-tight">Kamar ${row['Nomor Kamar']}</h3>
+                    <p class="text-[9px] text-gray-400 mt-2 font-bold uppercase text-left tracking-tighter">${row['Status'] || 'Pending'}</p>
                 </div>`;
             });
             document.getElementById('dynamicContent').innerHTML = html + `</div>`;
@@ -130,24 +130,13 @@
                 <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
                 <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp">
                     <div class="p-6 bg-blue-900 text-white flex justify-between items-center">
-                        <div>
-                            <h2 class="text-xl font-black italic">Kamar ${noKamar}</h2>
-                            <p class="text-[10px] uppercase opacity-70">${hotel}</p>
-                        </div>
+                        <div><h2 class="text-xl font-black italic">Kamar ${noKamar}</h2><p class="text-[10px] uppercase opacity-70">${hotel}</p></div>
                         <button onclick="closeModal()" class="text-2xl font-bold">&times;</button>
                     </div>
-                    <div class="p-6 overflow-y-auto space-y-5 text-left">
-                        <div>
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Checklist Snack (SOP 41 Item)</label>
-                            <div class="mt-2 grid grid-cols-1 gap-2">
-                                <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"><input type="checkbox" class="w-5 h-5"> <span class="text-xs font-bold">Air Mineral & Kurma</span></label>
-                                <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"><input type="checkbox" class="w-5 h-5"> <span class="text-xs font-bold">Kopi, Teh & Gula Set</span></label>
-                                <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"><input type="checkbox" class="w-5 h-5"> <span class="text-xs font-bold">Biskuit & Snack Kering</span></label>
-                            </div>
-                        </div>
+                    <div class="p-6 overflow-y-auto space-y-5 text-left bg-white">
                         <div>
                             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Update Status</label>
-                            <select id="updateStatus" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl font-bold text-blue-900">
+                            <select id="updateStatus" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl font-bold text-blue-900 focus:ring-2 ring-yellow-500 outline-none">
                                 <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Diisi</option>
                                 <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>Dalam Proses</option>
                                 <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>Lengkap (Sesuai SOP)</option>
@@ -155,4 +144,56 @@
                         </div>
                         <div>
                             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Catatan Kekurangan</label>
-                            <textarea id="updateCatatan" class="w-full
+                            <textarea id="updateCatatan" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl text-sm focus:ring-2 ring-yellow-500 outline-none" rows="3" placeholder="Contoh: Kurma habis...">${currentCatatan}</textarea>
+                        </div>
+                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="w-full py-4 bg-yellow-500 text-blue-950 font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all">
+                            SIMPAN KE SPREADSHEET
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        async function saveData(noKamar) {
+            const btn = document.getElementById('btnSimpan');
+            const status = document.getElementById('updateStatus').value;
+            const catatan = document.getElementById('updateCatatan').value;
+            btn.innerText = "MENGIRIM..."; btn.disabled = true;
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan })
+                });
+                alert("Data Kamar " + noKamar + " Berhasil Dikirim!");
+                closeModal();
+                init(); // Refresh dashboard
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "SIMPAN KE SPREADSHEET"; btn.disabled = false;
+            }
+        }
+
+        function closeModal() { const m = document.getElementById('modalLogistik'); if(m) m.remove(); }
+
+        function renderDefaultTable(rows) {
+            let html = `<div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse">`;
+            html += `<thead class="bg-gray-50 border-b"><tr>`;
+            Object.keys(rows[0]).forEach(h => html += `<th class="px-4 py-3 font-bold text-blue-900 uppercase tracking-tighter">${h}</th>`);
+            html += `</tr></thead><tbody class="divide-y divide-gray-50">`;
+            rows.forEach(row => {
+                html += `<tr>`;
+                Object.values(row).forEach(v => html += `<td class="px-4 py-4 text-gray-600 font-medium">${v}</td>`);
+                html += `</tr>`;
+            });
+            document.getElementById('dynamicContent').innerHTML = html + `</tbody></table></div></div>`;
+        }
+
+        function showDashboard() { renderDashboard(); }
+        init();
+    </script>
+</body>
+</html>
