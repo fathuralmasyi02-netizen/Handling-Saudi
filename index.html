@@ -8,131 +8,122 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: url('https://drive.google.com/uc?export=view&id=1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
+            /* Perbaikan Link Background */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-bottom: 2rem;
-        }
-        .status-badge {
-            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        /* Style khusus untuk tabel agar mudah dibaca di HP */
-        .table-container::-webkit-scrollbar {
-            height: 6px;
+        .nav-button {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
         }
-        .table-container::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+        .nav-button.active {
+            border-bottom: 3px solid #fbbf24;
+            color: #fbbf24;
+            font-weight: bold;
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-10 text-gray-800">
-    <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col items-center mb-10">
-            <img src="https://drive.google.com/uc?export=view&id=1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-24 md:h-32 mb-6 drop-shadow-xl">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-white text-center drop-shadow-lg uppercase tracking-wider">
-                Handling Saudi Haji 2026
+<body class="min-h-screen pb-10">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-col items-center py-8">
+            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-24 md:h-28 mb-4 drop-shadow-lg">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white text-center tracking-tighter uppercase">
+                Handling Haji Jejak Imani 2026
             </h1>
-            <div class="h-1 w-24 bg-yellow-400 mt-4 rounded-full shadow-lg"></div>
         </div>
 
-        <div class="glass-card p-4 flex items-center gap-4 mb-8">
-            <span class="text-blue-800 font-bold">CARI:</span>
-            <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Ketik nama jamaah atau nomor kamar..." 
-                   class="flex-1 bg-transparent border-b-2 border-blue-200 focus:border-blue-600 outline-none p-2 transition-all">
+        <div class="glass-card mb-6 sticky top-4 z-50 overflow-x-auto">
+            <nav class="flex justify-around p-2 whitespace-nowrap" id="mainNav">
+                <span class="p-4 text-gray-400">Memuat Menu...</span>
+            </nav>
         </div>
 
-        <div id="app" class="space-y-4">
-            <div class="text-center py-20 text-white font-bold animate-bounce">
-                MENGHUBUNGKAN KE SERVER DATABASE...
-            </div>
+        <div class="glass-card p-4 mb-6 flex items-center gap-3">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari data (Nama, Kamar, atau Barang)..." class="w-full bg-transparent outline-none text-sm">
+        </div>
+
+        <div id="tableContent" class="space-y-6">
+            <div class="text-center py-20 text-white font-bold animate-pulse">MENGHUBUNGKAN KE DATABASE...</div>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwYiG0qK-7OsoXutkcdkJ64bltUdM0RWg0-54r3-800xHO6XSzK8Jo-7wuvx8mWC7xbcA/exec";
-        let rawData = {};
+        const API_URL = "https://script.google.com/macros/s/AKfycbycNAnDYB_9n-O89nfMKomT9Mt5Y7VBnOaRifbOc3x43PQZFZM7NroUl_fWRDlz-_cLTA/exec"; // GANTI DENGAN URL DEPLOY ANDA
+        let appData = {};
 
-        async function fetchData() {
+        async function init() {
             try {
                 const response = await fetch(API_URL);
-                rawData = await response.json();
-                renderData(rawData);
-            } catch (error) {
-                document.getElementById('app').innerHTML = `
-                    <div class="glass-card p-10 text-center">
-                        <p class="text-red-600 font-bold text-xl">⚠️ KONEKSI GAGAL</p>
-                        <p class="text-gray-600 mt-2">Pastikan Deploy Apps Script Anda sudah benar.</p>
-                    </div>`;
+                appData = await response.json();
+                createMenu(Object.keys(appData));
+                showSheet(Object.keys(appData)[0]); // Tampilkan sheet pertama otomatis
+            } catch (e) {
+                document.getElementById('tableContent').innerHTML = `<div class="glass-card p-10 text-center text-red-600 font-bold">Gagal memuat data. Periksa API URL.</div>`;
             }
         }
 
-        function renderData(data) {
-            const container = document.getElementById('app');
-            container.innerHTML = '';
-
-            for (const [sheetName, rows] of Object.entries(data)) {
-                let tableHTML = `
-                    <div class="glass-card overflow-hidden data-section">
-                        <div class="bg-blue-900 px-6 py-4 flex justify-between items-center">
-                            <h2 class="text-white font-bold text-lg tracking-widest uppercase">${sheetName}</h2>
-                            <span class="text-blue-200 text-xs">${rows.length} Data</span>
-                        </div>
-                        <div class="table-container overflow-x-auto p-4">
-                            <table class="w-full text-left text-sm whitespace-nowrap">
-                                <thead>
-                                    <tr class="text-blue-900 border-b-2 border-blue-100 italic">
-                                        ${Object.keys(rows[0] || {}).map(h => `<th class='px-4 py-3 font-bold'>${h}</th>`).join('')}
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    ${rows.map(row => `
-                                        <tr class="hover:bg-blue-50/80 transition-all row-item">
-                                            ${Object.values(row).map(v => `<td class="px-4 py-3 text-gray-700 font-medium">${formatValue(v)}</td>`).join('')}
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += tableHTML;
-            }
+        function createMenu(sheetNames) {
+            const nav = document.getElementById('mainNav');
+            nav.innerHTML = sheetNames.map((name, index) => `
+                <button onclick="showSheet('${name}')" id="btn-${name}" class="nav-button px-4 py-2 text-sm font-semibold text-blue-900 hover:text-yellow-600 uppercase tracking-wide">
+                    ${name}
+                </button>
+            `).join('');
         }
 
-        function formatValue(val) {
-            const v = String(val).trim();
-            if (["READY", "SUDAH", "TERSEDIA", "SELESAI"].includes(v.toUpperCase())) {
-                return `<span class="bg-green-600 text-white status-badge">${v}</span>`;
-            }
-            if (["BELUM", "PENDING", "PROSES", "KOSONG"].includes(v.toUpperCase())) {
-                return `<span class="bg-amber-500 text-white status-badge">${v}</span>`;
-            }
-            return v;
-        }
+        function showSheet(name) {
+            // Update UI Button Active
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${name}`).classList.add('active');
 
-        function filterData() {
-            let input = document.getElementById("searchInput").value.toUpperCase();
-            let rows = document.querySelectorAll(".row-item");
+            const rows = appData[name];
+            const container = document.getElementById('tableContent');
             
-            rows.forEach(row => {
-                let text = row.textContent.toUpperCase();
-                row.style.display = text.includes(input) ? "" : "none";
+            if (!rows || rows.length === 0) {
+                container.innerHTML = `<div class="glass-card p-10 text-center">Data Kosong</div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="glass-card overflow-hidden animate-fadeIn">
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left text-sm" id="dataTable">
+                            <thead>
+                                <tr class="border-b-2 border-gray-100 text-blue-900">
+                                    ${Object.keys(rows[0]).map(h => `<th class="px-4 py-3 font-bold">${h}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                ${rows.map(row => `
+                                    <tr class="hover:bg-blue-50/50 transition-colors">
+                                        ${Object.values(row).map(v => `<td class="px-4 py-3 text-gray-700">${v}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toUpperCase();
+            const tr = document.querySelectorAll("#dataTable tbody tr");
+            tr.forEach(row => {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
             });
         }
 
-        fetchData();
+        init();
     </script>
 </body>
 </html>
