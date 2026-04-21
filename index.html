@@ -5,109 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handling Haji Jejak Imani 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@700;900&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@900&family=Mulish:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --font-header: 'Martel', serif; --font-body: 'Mulish', sans-serif; }
         body {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+            background: #0f172a linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
                         url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
-            background-size: cover; font-family: var(--font-body); color: #1e293b;
+            background-size: cover; font-family: var(--font-body); color: #f8fafc;
         }
-        .glass-card { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1000; transition: 0.4s; }
+        .glass-card { background: rgba(255, 255, 255, 0.98); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: #1e293b; }
+        #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #1e293b; }
         #sidebar.active { left: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 999; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
         .overlay.active { display: block; }
-        .fab-main { width: 60px; height: 60px; border-radius: 50%; background: #fbbf24; color: #1e3a8a; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.4); position: fixed; bottom: 30px; right: 30px; z-index: 100; }
-        .fab-options { position: fixed; bottom: 100px; right: 30px; display: none; flex-direction: column; gap: 10px; z-index: 100; }
-        .fab-options.active { display: flex; }
-        .fab-item { background: white; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 13px; color: #1e3a8a; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-left: 4px solid #fbbf24; }
+        .skeleton { background: #e2e8f0; animation: pulse 1.5s infinite; height: 20px; border-radius: 4px; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1001] text-white bg-blue-900 p-3 rounded-xl shadow-2xl">
+    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1001] bg-yellow-500 text-blue-950 p-3 rounded-full shadow-2xl active:scale-90 transition-transform">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
     </button>
 
-    <div id="sidebar" class="flex flex-col shadow-2xl">
-        <div class="p-8 flex flex-col items-center border-b bg-gray-50">
-            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-20 mb-4">
-            <h2 style="font-family: var(--font-header);" class="text-blue-900 font-bold uppercase text-center text-sm">Jejak Imani<br>Operational</h2>
+    <div id="sidebar">
+        <div class="p-8 flex flex-col items-center border-b border-gray-100">
+            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-16 mb-4">
+            <h2 style="font-family: var(--font-header);" class="text-blue-900 font-black uppercase text-xs text-center tracking-tighter">Jejak Imani<br>Operational</h2>
         </div>
-        <div class="p-4 flex flex-col gap-1">
-            <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-xl hover:bg-blue-50 text-blue-900 font-black uppercase text-[11px] tracking-widest">🏠 Dashboard</button>
-            <button onclick="changeSheet('CHECKLIST PERLENGKAPAN')" class="w-full text-left p-4 rounded-xl hover:bg-blue-50 text-blue-900 font-bold uppercase text-[11px] tracking-widest">📊 Checklist Perlengkapan</button>
-            <button onclick="changeSheet('LOGISTIK KAMAR')" class="w-full text-left p-4 rounded-xl hover:bg-blue-50 text-blue-900 font-bold uppercase text-[11px] tracking-widest">📊 Logistik Kamar</button>
-            <button onclick="changeSheet('ROOMLIST')" class="w-full text-left p-4 rounded-xl hover:bg-blue-50 text-blue-900 font-bold uppercase text-[11px] tracking-widest">📊 Roomlist</button>
-            <button onclick="changeSheet('KEGIATAN')" class="w-full text-left p-4 rounded-xl hover:bg-blue-50 text-blue-900 font-bold uppercase text-[11px] tracking-widest">📊 Kegiatan</button>
+        <div class="p-3 space-y-1">
+            <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-blue-900">🏠 Dashboard Utama</button>
+            <button onclick="changeSheet('CHECKLIST PERLENGKAPAN')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📋 Perlengkapan</button>
+            <button onclick="changeSheet('LOGISTIK KAMAR')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📦 Logistik Kamar</button>
+            <button onclick="changeSheet('ROOMLIST')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">👥 Roomlist</button>
+            <button onclick="changeSheet('KEGIATAN')" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs uppercase tracking-widest text-gray-600">📅 Jadwal Kegiatan</button>
         </div>
     </div>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
-    <div class="max-w-6xl mx-auto px-4 pt-24 pb-20">
-        <div id="header" class="text-center mb-10 text-white">
-            <h1 id="pageTitle" class="text-3xl md:text-5xl font-black uppercase tracking-tight" style="font-family: var(--font-header);">Dashboard</h1>
-            <p id="pageSub" class="text-yellow-400 font-bold uppercase text-xs tracking-widest mt-2">Memuat Data...</p>
+    <div class="max-w-4xl mx-auto px-4 pt-24 pb-24">
+        <div class="text-center mb-8">
+            <h1 id="pageTitle" class="text-3xl font-black uppercase italic tracking-tighter text-white" style="font-family: var(--font-header);">Dashboard</h1>
+            <div id="statusBadge" class="inline-block mt-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Offline Mode</div>
         </div>
-        <div id="dynamicContent" class="space-y-6"></div>
+        <div id="dynamicContent" class="grid grid-cols-1 gap-4"></div>
     </div>
-
-    <div class="fab-options" id="fabOptions">
-        <a href="https://forms.gle/tK9kMSKDvfixnDfK6" target="_blank" class="fab-item">📝 Logistik Kamar</a>
-        <a href="https://forms.gle/akcSTxfaA2dXjPdB8" target="_blank" class="fab-item">📦 Perlengkapan Umum</a>
-        <a href="https://forms.gle/WVNkUTYRRmEErbuw9" target="_blank" class="fab-item">👥 Roomlist Jamaah</a>
-        <a href="https://forms.gle/UoKDFbugi4xsGA2j6" target="_blank" class="fab-item">📅 Jadwal Kegiatan</a>
-    </div>
-    <div class="fab-main" onclick="toggleFab()"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzHukRNaLTwvyYCiP10g1oDQX78ye-6rwWUdechv7jy26jH1-JvOW4jrTgi4waya_ZXtQ/exec"; // GANTI INI
-        let appData = JSON.parse(localStorage.getItem('hajiData')) || {};
+        const API_URL = "https://script.google.com/macros/s/AKfycbzHukRNaLTwvyYCiP10g1oDQX78ye-6rwWUdechv7jy26jH1-JvOW4jrTgi4waya_ZXtQ/exec"; 
+        let appData = JSON.parse(localStorage.getItem('hajiData')) || null;
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
-        function toggleFab() { document.getElementById('fabOptions').classList.toggle('active'); }
 
         async function init() {
-            if(Object.keys(appData).length > 0) { renderDashboard(); document.getElementById('pageSub').innerText = "Data Offline (Tarik untuk Update)"; }
+            if(appData) {
+                renderDashboard();
+            } else {
+                showLoading();
+            }
+            
             try {
                 const res = await fetch(API_URL);
                 const json = await res.json();
                 appData = json;
-                localStorage.setItem('hajiData', JSON.stringify(json)); // Simpan Offline
-                renderDashboard();
-                document.getElementById('pageSub').innerText = "Data Terbaru (Online)";
-            } catch (e) { console.error("Gagal ambil data online."); }
+                localStorage.setItem('hajiData', JSON.stringify(json));
+                document.getElementById('statusBadge').innerText = "Data Live Sync";
+                document.getElementById('statusBadge').classList.replace('text-yellow-400', 'text-green-400');
+                if(document.getElementById('pageTitle').innerText === "Dashboard") renderDashboard();
+            } catch (e) {
+                console.error("Sync gagal.");
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('dynamicContent').innerHTML = Array(4).fill(0).map(() => `<div class="glass-card p-6 space-y-3"><div class="skeleton w-1/2"></div><div class="skeleton w-full"></div></div>`).join('');
         }
 
         function renderDashboard() {
-            let html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+            document.getElementById('pageTitle').innerText = "Dashboard";
+            let html = ``;
             for (const name in appData) {
-                html += `<div class="glass-card p-8 text-center"><h3 class="text-4xl font-black text-blue-900">${appData[name].length}</h3><p class="text-xs font-bold uppercase tracking-widest text-gray-400">${name}</p></div>`;
+                html += `
+                <div onclick="changeSheet('${name}')" class="glass-card p-6 flex justify-between items-center cursor-pointer active:scale-95 transition-transform">
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p>
+                        <h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3>
+                    </div>
+                    <div class="text-blue-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>`;
             }
-            document.getElementById('dynamicContent').innerHTML = html + `</div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
         }
 
         function changeSheet(name) {
-            toggleSidebar();
             document.getElementById('pageTitle').innerText = name;
-            const rows = appData[name] || [];
-            if(rows.length === 0) {
-                document.getElementById('dynamicContent').innerHTML = `<div class="text-white text-center py-10 animate-pulse">Menghubungkan ke Google Sheets...</div>`;
+            const rows = appData ? appData[name] : [];
+            if(!rows || rows.length === 0) {
+                showLoading();
                 return;
             }
-            let table = `<div class="glass-card overflow-hidden"><div class="overflow-x-auto p-2"><table class="w-full text-left text-sm"><thead><tr class="border-b-2 border-blue-50 text-blue-900">`;
-            Object.keys(rows[0]).forEach(h => table += `<th class="px-5 py-4 font-black uppercase text-[10px]">${h}</th>`);
-            table += `</tr></thead><tbody>`;
+            
+            let html = `<div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-xs border-collapse">`;
+            html += `<thead class="bg-gray-50 border-b border-gray-100"><tr>`;
+            Object.keys(rows[0]).forEach(h => html += `<th class="px-4 py-3 font-bold text-blue-900 uppercase tracking-tighter">${h}</th>`);
+            html += `</tr></thead><tbody class="divide-y divide-gray-50">`;
             rows.forEach(row => {
-                table += `<tr class="border-b border-gray-100 italic">`;
-                Object.values(row).forEach(v => table += `<td class="px-5 py-4 text-gray-700 font-medium text-xs">${v}</td>`);
-                table += `</tr>`;
+                html += `<tr>`;
+                Object.values(row).forEach(v => html += `<td class="px-4 py-4 text-gray-600 font-medium">${v}</td>`);
+                html += `</tr>`;
             });
-            document.getElementById('dynamicContent').innerHTML = table + `</tbody></table></div></div>`;
+            document.getElementById('dynamicContent').innerHTML = html + `</tbody></table></div></div>`;
         }
 
-        function showDashboard() { document.getElementById('pageTitle').innerText = "Dashboard"; renderDashboard(); }
+        function showDashboard() { renderDashboard(); }
 
         init();
     </script>
