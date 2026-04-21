@@ -5,83 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handling Haji Jejak Imani 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@700;900&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --font-header: 'Martel', serif;
+            --font-body: 'Mulish', sans-serif;
+        }
+
         body {
-            /* Perbaikan Link Background */
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                         url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: var(--font-body);
         }
+
+        h1, h2, th {
+            font-family: var(--font-header);
+        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
         .nav-button {
             transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            position: relative;
         }
+
         .nav-button.active {
-            border-bottom: 3px solid #fbbf24;
-            color: #fbbf24;
-            font-weight: bold;
+            color: #b48c04;
+            font-weight: 800;
+        }
+
+        .nav-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 10px;
+        }
+
+        /* Penyesuaian Tabel agar font Mulish terlihat jernih */
+        table {
+            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>
 <body class="min-h-screen pb-10">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex flex-col items-center py-8">
-            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-24 md:h-28 mb-4 drop-shadow-lg">
-            <h1 class="text-2xl md:text-3xl font-extrabold text-white text-center tracking-tighter uppercase">
-                Handling Haji Jejak Imani 2026
+        <div class="flex flex-col items-center py-10">
+            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-28 md:h-32 mb-6 drop-shadow-2xl">
+            <h1 class="text-3xl md:text-5xl font-black text-white text-center tracking-tight uppercase drop-shadow-lg">
+                Handling Haji 2026
             </h1>
+            <p class="text-yellow-400 font-bold tracking-[0.2em] mt-2 uppercase text-sm">Jejak Imani Operasional</p>
         </div>
 
-        <div class="glass-card mb-6 sticky top-4 z-50 overflow-x-auto">
-            <nav class="flex justify-around p-2 whitespace-nowrap" id="mainNav">
-                <span class="p-4 text-gray-400">Memuat Menu...</span>
+        <div class="glass-card mb-8 sticky top-4 z-50 overflow-x-auto">
+            <nav class="flex justify-around p-1 whitespace-nowrap" id="mainNav">
+                <span class="p-4 text-gray-400 font-semibold">Memuat Database...</span>
             </nav>
         </div>
 
-        <div class="glass-card p-4 mb-6 flex items-center gap-3">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari data (Nama, Kamar, atau Barang)..." class="w-full bg-transparent outline-none text-sm">
+        <div class="glass-card p-5 mb-8 flex items-center gap-4 border-l-8 border-yellow-500">
+            <svg class="w-6 h-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari nama jamaah, kamar, atau agenda..." class="w-full bg-transparent outline-none text-lg font-semibold text-blue-900 placeholder-blue-300">
         </div>
 
         <div id="tableContent" class="space-y-6">
-            <div class="text-center py-20 text-white font-bold animate-pulse">MENGHUBUNGKAN KE DATABASE...</div>
-        </div>
+            </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbycNAnDYB_9n-O89nfMKomT9Mt5Y7VBnOaRifbOc3x43PQZFZM7NroUl_fWRDlz-_cLTA/exec"; // GANTI DENGAN URL DEPLOY ANDA
+        const API_URL = "https://script.google.com/macros/s/AKfycbycNAnDYB_9n-O89nfMKomT9Mt5Y7VBnOaRifbOc3x43PQZFZM7NroUl_fWRDlz-_cLTA/exec"; 
         let appData = {};
 
         async function init() {
             try {
                 const response = await fetch(API_URL);
                 appData = await response.json();
-                createMenu(Object.keys(appData));
-                showSheet(Object.keys(appData)[0]); // Tampilkan sheet pertama otomatis
+                const sheets = Object.keys(appData);
+                createMenu(sheets);
+                showSheet(sheets[0]); 
             } catch (e) {
-                document.getElementById('tableContent').innerHTML = `<div class="glass-card p-10 text-center text-red-600 font-bold">Gagal memuat data. Periksa API URL.</div>`;
+                document.getElementById('tableContent').innerHTML = `<div class="glass-card p-10 text-center text-red-600 font-bold">Gagal sinkronisasi data. Periksa koneksi atau URL Script.</div>`;
             }
         }
 
         function createMenu(sheetNames) {
             const nav = document.getElementById('mainNav');
-            nav.innerHTML = sheetNames.map((name, index) => `
-                <button onclick="showSheet('${name}')" id="btn-${name}" class="nav-button px-4 py-2 text-sm font-semibold text-blue-900 hover:text-yellow-600 uppercase tracking-wide">
+            nav.innerHTML = sheetNames.map(name => `
+                <button onclick="showSheet('${name}')" id="btn-${name}" class="nav-button px-6 py-4 text-sm font-bold text-blue-900 hover:text-yellow-600 uppercase tracking-widest">
                     ${name}
                 </button>
             `).join('');
         }
 
         function showSheet(name) {
-            // Update UI Button Active
             document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${name}`).classList.add('active');
 
@@ -89,23 +117,26 @@
             const container = document.getElementById('tableContent');
             
             if (!rows || rows.length === 0) {
-                container.innerHTML = `<div class="glass-card p-10 text-center">Data Kosong</div>`;
+                container.innerHTML = `<div class="glass-card p-20 text-center font-bold text-gray-400">Data pada sheet "${name}" tidak ditemukan.</div>`;
                 return;
             }
 
             container.innerHTML = `
-                <div class="glass-card overflow-hidden animate-fadeIn">
-                    <div class="overflow-x-auto p-4">
+                <div class="glass-card overflow-hidden transition-all duration-500">
+                    <div class="bg-blue-900 px-6 py-3 text-white">
+                        <span class="text-xs font-bold tracking-widest opacity-70 uppercase">Kategori: ${name}</span>
+                    </div>
+                    <div class="overflow-x-auto p-2">
                         <table class="w-full text-left text-sm" id="dataTable">
                             <thead>
-                                <tr class="border-b-2 border-gray-100 text-blue-900">
-                                    ${Object.keys(rows[0]).map(h => `<th class="px-4 py-3 font-bold">${h}</th>`).join('')}
+                                <tr class="border-b-2 border-blue-100 text-blue-900 bg-blue-50/50">
+                                    ${Object.keys(rows[0]).map(h => `<th class="px-5 py-4 font-black uppercase tracking-wider text-xs">${h}</th>`).join('')}
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50">
+                            <tbody class="divide-y divide-gray-100">
                                 ${rows.map(row => `
-                                    <tr class="hover:bg-blue-50/50 transition-colors">
-                                        ${Object.values(row).map(v => `<td class="px-4 py-3 text-gray-700">${v}</td>`).join('')}
+                                    <tr class="hover:bg-yellow-50/50 transition-colors">
+                                        ${Object.values(row).map(v => `<td class="px-5 py-4 text-gray-700 font-medium">${v}</td>`).join('')}
                                     </tr>
                                 `).join('')}
                             </tbody>
