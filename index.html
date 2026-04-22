@@ -8,80 +8,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Martel:wght@700;900&family=Mulish:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold: #d4af37; 
-            --gold-light: #f1d592;
-            --navy: #0f172a;
+            --gold: #b8860b; 
+            --gold-bright: #d4af37;
+            --soft-bg: #f8fafc;
             --font-header: 'Martel', serif; 
             --font-body: 'Mulish', sans-serif; 
         }
         
         body {
-            /* Menggunakan Background yang Anda berikan dengan overlay premium */
-            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+            /* Tema Terang: Background putih dengan tekstur halus dari gambar Anda */
+            background: linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)), 
                         url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
             background-size: cover; 
             font-family: var(--font-body); 
-            color: #f8fafc;
+            color: #1e293b;
         }
 
-        .gold-gradient {
-            background: linear-gradient(135deg, #d4af37 0%, #f1d592 50%, #b8860b 100%);
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #8b6508 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.95); 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
-            color: var(--navy);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+        .glass-card-light { 
+            background: rgba(255, 255, 255, 1); 
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); 
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
         }
 
-        .btn-gold {
+        .glass-card-light:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(184, 134, 11, 0.1);
+            border-color: var(--gold-bright);
+        }
+
+        .btn-gold-bright {
             background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-            color: var(--navy);
+            color: white;
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+            box-shadow: 0 8px 20px rgba(184, 134, 11, 0.2);
         }
 
         #sidebar { 
             position: fixed; top: 0; left: -300px; width: 280px; height: 100%; 
-            background: var(--navy); border-right: 2px solid var(--gold);
+            background: white; border-right: 1px solid #e2e8f0;
             z-index: 1001; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         #sidebar.active { left: 0; }
         
-        .nav-item { border-left: 4px solid transparent; transition: all 0.3s; }
-        .nav-item:hover { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); }
+        .nav-item { border-left: 4px solid transparent; color: #64748b; font-weight: 700; transition: all 0.3s; }
+        .nav-item.active-menu { background: #fefce8; border-left: 4px solid var(--gold); color: var(--gold); }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; backdrop-filter: blur(4px); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.3); display: none; z-index: 1000; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
 
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
-        .refill-alert { animation: pulse-gold 2s infinite; border: 2px solid #ef4444 !important; }
+        .refill-alert { animation: pulse-red 1.5s infinite; border: 2px solid #ef4444 !important; background: #fff1f2 !important; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] btn-gold p-3 rounded-xl shadow-2xl active:scale-90 transition-transform">
+    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] bg-white text-slate-800 p-3.5 rounded-2xl shadow-xl active:scale-90 transition-transform border border-slate-100">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
     </button>
 
     <div id="sidebar" class="flex flex-col shadow-2xl">
-        <div class="p-8 flex flex-col items-center border-b border-white/10">
+        <div class="p-8 flex flex-col items-center border-b border-slate-50">
             <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-20 mb-4 object-contain">
-            <h2 style="font-family: var(--font-header);" class="gold-gradient font-black uppercase text-[10px] text-center tracking-widest leading-tight">Operational<br>Haji 2026</h2>
+            <h2 style="font-family: var(--font-header);" class="text-slate-800 font-black uppercase text-[11px] text-center tracking-[0.2em] leading-tight">Operational<br><span class="text-gold">Haji 2026</span></h2>
         </div>
         <nav class="p-4 space-y-2">
-            <button onclick="showDashboard(); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-white uppercase tracking-widest flex items-center gap-3">
+            <button onclick="showDashboard(); toggleSidebar()" class="nav-item active-menu w-full text-left p-4 rounded-xl text-xs uppercase tracking-widest flex items-center gap-3">
                 <span>🏠</span> Dashboard
             </button>
-            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-gray-400 hover:text-white uppercase tracking-widest flex items-center gap-3">
+            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl text-xs uppercase tracking-widest flex items-center gap-3">
                 <span>📦</span> Logistik Kamar
             </button>
         </nav>
@@ -89,16 +95,16 @@
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="max-w-4xl mx-auto px-4 pt-24 pb-24 text-center">
-        <div class="flex justify-center mb-6">
+        <div class="flex justify-center mb-4">
             <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Jejak Imani" class="h-16 object-contain">
         </div>
 
-        <h1 id="pageTitle" class="text-4xl font-black uppercase italic tracking-tighter gold-gradient mb-2" style="font-family: var(--font-header);">Dashboard</h1>
-        <div id="statusBadge" class="inline-block mb-8 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-light">
-            Sistem Terkoneksi
+        <h1 id="pageTitle" class="text-4xl font-black uppercase tracking-tighter text-slate-800 mb-1" style="font-family: var(--font-header);">Dashboard</h1>
+        <div id="statusBadge" class="inline-block mb-10 px-4 py-1 bg-slate-100 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-slate-500 border border-slate-200">
+            Sistem Online
         </div>
 
-        <div id="dynamicContent" class="grid grid-cols-1 gap-6"></div>
+        <div id="dynamicContent" class="grid grid-cols-1 gap-5 text-left"></div>
     </div>
 
     <script>
@@ -127,21 +133,21 @@
                 const res = await fetch(API_URL);
                 appData = await res.json();
                 renderDashboard();
-            } catch (e) { console.error("Koneksi Gagal"); }
+            } catch (e) { console.error("Sync Error"); }
         }
 
         function renderDashboard() {
             const container = document.getElementById('dynamicContent');
-            container.className = "grid grid-cols-1 gap-6";
+            container.className = "grid grid-cols-1 gap-5";
             let html = ``;
             for (const name in appData) {
                 html += `
-                <div onclick="changeSheet('${name}')" class="glass-card p-8 flex justify-between items-center cursor-pointer transition-all hover:translate-y-[-5px]">
-                    <div class="text-left">
-                        <p class="text-[10px] font-extrabold text-gold uppercase tracking-[0.3em] mb-1">${name}</p>
-                        <h3 class="text-3xl font-black text-slate-800">${appData[name].length} <span class="text-sm font-normal text-slate-400 uppercase tracking-widest">Records</span></h3>
+                <div onclick="changeSheet('${name}')" class="glass-card-light p-7 flex justify-between items-center cursor-pointer">
+                    <div>
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">${name}</p>
+                        <h3 class="text-2xl font-black text-slate-800">${appData[name].length} <span class="text-xs font-bold text-slate-300 italic uppercase">Entries</span></h3>
                     </div>
-                    <div class="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-gold">
+                    <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-gold">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                 </div>`;
@@ -151,11 +157,8 @@
 
         function changeSheet(name) {
             document.getElementById('pageTitle').innerText = name;
-            if (name === "LOGISTIK KAMAR") {
-                renderLogistikGrid(appData[name]);
-            } else {
-                renderDefaultTable(appData[name]);
-            }
+            if (name === "LOGISTIK KAMAR") renderLogistikGrid(appData[name]);
+            else renderDefaultTable(appData[name]);
         }
 
         function renderLogistikGrid(rows) {
@@ -163,20 +166,16 @@
             container.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
             let html = ``;
             rows.forEach(row => {
-                let statusStyle = "";
-                let statusText = row['Status'] || "Pending";
-                if(row['Status'] === "Perlu Refill") statusStyle = "refill-alert";
-                if(row['Status'] === "Lengkap") statusStyle = "border-green-400 bg-green-50/30";
+                let statusClass = "";
+                if(row['Status'] === "Perlu Refill") statusClass = "refill-alert";
+                else if(row['Status'] === "Lengkap") statusClass = "border-green-200 bg-green-50/50";
 
                 html += `
                 <div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status']}', '${row['Catatan']}')" 
-                     class="glass-card p-5 border-t-4 border-slate-200 ${statusStyle} cursor-pointer active:scale-95 transition-all text-left">
+                     class="glass-card-light p-5 border-b-4 border-slate-100 ${statusClass} cursor-pointer active:scale-95 transition-all">
                     <p class="text-[9px] font-extrabold text-gold uppercase tracking-wider mb-1">${row['Hotel']}</p>
-                    <h3 class="text-xl font-black text-slate-800 leading-tight">Room ${row['Nomor Kamar']}</h3>
-                    <div class="mt-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full ${row['Status'] === 'Perlu Refill' ? 'bg-red-500' : 'bg-slate-400'}"></span>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase">${statusText}</p>
-                    </div>
+                    <h3 class="text-xl font-black text-slate-800">Room ${row['Nomor Kamar']}</h3>
+                    <p class="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">${row['Status'] || 'Pending'}</p>
                 </div>`;
             });
             container.innerHTML = html;
@@ -185,39 +184,38 @@
         function openModalLogistik(noKamar, hotel, currentStatus, currentCatatan) {
             const modalHtml = `
             <div id="modalLogistik" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center p-4">
-                <div class="fixed inset-0 bg-navy/90 backdrop-blur-md" onclick="closeModal()"></div>
-                <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp" style="border: 2px solid var(--gold)">
-                    <div class="p-6 btn-gold flex justify-between items-center shadow-lg">
-                        <div class="text-left text-navy">
-                            <h2 class="text-2xl font-black italic tracking-tighter" style="font-family: var(--font-header);">ROOM ${noKamar}</h2>
-                            <p class="text-[10px] font-bold uppercase tracking-widest">${hotel}</p>
+                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
+                <div class="glass-card-light w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp">
+                    <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+                        <div class="text-left">
+                            <h2 class="text-2xl font-black italic tracking-tighter text-slate-800" style="font-family: var(--font-header);">ROOM ${noKamar}</h2>
+                            <p class="text-[10px] font-bold text-gold uppercase tracking-widest">${hotel}</p>
                         </div>
-                        <button onclick="closeModal()" class="h-10 w-10 bg-navy/10 rounded-full text-2xl font-black">×</button>
+                        <button onclick="closeModal()" class="h-10 w-10 bg-slate-50 rounded-full text-xl font-black text-slate-400">×</button>
                     </div>
-                    <div class="p-6 overflow-y-auto bg-white text-left space-y-6">
+                    <div class="p-6 overflow-y-auto space-y-6 text-left">
                         <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">SOP Checklist</label>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Checklist Persediaan</label>
                             <div class="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto p-3 bg-slate-50 rounded-2xl border border-slate-100">
                                 ${SOP_ITEMS.map(item => `
-                                    <label class="flex items-center gap-3 p-3 hover:bg-white rounded-xl transition-all cursor-pointer border border-transparent hover:border-gold/20">
+                                    <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-transparent hover:border-gold/20 cursor-pointer">
                                         <input type="checkbox" class="w-5 h-5 rounded border-slate-300 text-gold focus:ring-gold">
-                                        <span class="text-[11px] font-bold text-slate-700">${item}</span>
+                                        <span class="text-[11px] font-bold text-slate-600">${item}</span>
                                     </label>
                                 `).join('')}
                             </div>
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Status & Catatan</label>
-                            <select id="updateStatus" class="w-full mb-3 p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-extrabold text-navy outline-none focus:border-gold">
+                        <div class="space-y-4">
+                            <select id="updateStatus" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-extrabold text-slate-800 outline-none">
                                 <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>BELUM DIISI</option>
-                                <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>DALAM PROSES</option>
+                                <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>PROSES PENGISIAN</option>
                                 <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>LENGKAP (SOP)</option>
                                 <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>REFILL REQUIRED 🔴</option>
                             </select>
-                            <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-semibold outline-none focus:border-gold" rows="2" placeholder="Catatan...">${currentCatatan}</textarea>
+                            <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-semibold outline-none" rows="2" placeholder="Catatan operasional...">${currentCatatan}</textarea>
                         </div>
-                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="btn-gold w-full py-5 rounded-2xl shadow-xl active:scale-95 transition-all text-sm tracking-[0.2em]">
-                            SIMPAN PERUBAHAN
+                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="btn-gold-bright w-full py-5 rounded-2xl active:scale-95 transition-all text-xs tracking-[0.2em]">
+                            SIMPAN LAPORAN
                         </button>
                     </div>
                 </div>
@@ -227,7 +225,7 @@
 
         async function saveData(noKamar) {
             const btn = document.getElementById('btnSimpan');
-            btn.innerText = "SYNCHRONIZING..."; btn.disabled = true;
+            btn.innerText = "UPDATING..."; btn.disabled = true;
             try {
                 await fetch(API_URL, {
                     method: 'POST',
@@ -235,7 +233,7 @@
                     body: JSON.stringify({ noKamar: noKamar, status: document.getElementById('updateStatus').value, catatan: document.getElementById('updateCatatan').value })
                 });
                 closeModal(); init();
-            } catch (e) { alert("Update Gagal!"); }
+            } catch (e) { alert("Gagal!"); }
         }
 
         function closeModal() { const m = document.getElementById('modalLogistik'); if(m) m.remove(); }
