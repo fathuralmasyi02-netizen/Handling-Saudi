@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan Kamar - Jejak Imani</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@700;900&family=Mulish:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: #b8860b; 
+            --gold-bright: #d4af37;
+            --font-header: 'Martel', serif; 
+            --font-body: 'Mulish', sans-serif; 
+        }
+        body {
+            background: linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)), 
+                        url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
+            background-size: cover; font-family: var(--font-body); color: #1e293b;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white; font-weight: 800; box-shadow: 0 10px 20px rgba(184, 134, 11, 0.2);
+        }
+        .item-card {
+            border: 1px solid #f1f5f9; transition: all 0.2s;
+        }
+        .item-card.selected {
+            border-color: var(--gold-bright); background: #fefce8;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-10">
+
+    <div class="bg-white shadow-sm p-6 flex flex-col items-center border-b border-slate-100">
+        <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-14 mb-2">
+        <h1 style="font-family: var(--font-header);" class="text-slate-800 font-black uppercase text-xs tracking-widest text-center">
+            Layanan Logistik Kamar
+        </h1>
+    </div>
+
+    <div class="max-w-md mx-auto px-6 mt-8">
+        <div class="space-y-4 mb-8">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Pilih Nomor Kamar</label>
+                <select id="noKamar" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-black text-slate-800 outline-none focus:border-gold">
+                    <option value="">-- Pilih Kamar --</option>
+                    <option value="101">Kamar 101</option>
+                    <option value="102">Kamar 102</option>
+                    <option value="201">Kamar 201</option>
+                </select>
+            </div>
+        </div>
+
+        <h2 class="text-sm font-black text-slate-800 uppercase tracking-tighter mb-4 px-2">Item yang habis:</h2>
+        <div id="itemList" class="grid grid-cols-1 gap-3 mb-10">
+            </div>
+
+        <div class="fixed bottom-0 left-0 w-full p-6 bg-white/80 backdrop-blur-md border-t border-slate-100">
+            <button onclick="kirimPesanan()" id="btnKirim" class="btn-gold w-full py-5 rounded-2xl active:scale-95 transition-all text-sm tracking-[0.2em]">
+                PESAN SEKARANG
+            </button>
+        </div>
+    </div>
+
+    <div id="modalSuccess" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+        <div class="bg-white p-10 rounded-3xl text-center max-w-xs shadow-2xl">
+            <div class="text-5xl mb-4">✅</div>
+            <h3 class="text-xl font-black text-slate-800 mb-2">Alhamdulillah</h3>
+            <p class="text-sm text-slate-500 font-bold mb-6">Pesanan Anda telah diterima tim kami. Petugas akan segera menuju kamar Anda.</p>
+            <button onclick="location.reload()" class="w-full py-3 bg-slate-100 rounded-xl font-bold text-slate-600">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        // URL Apps Script Anda (Sama dengan URL di Dashboard)
+        const API_URL = "URL_APPS_SCRIPT_ANDA"; 
+
+        const ITEMS = [
+            "Ajwa Almadina Malaki", "Alkhair Chai Karak Cardamom", "Baja Cashew", "Juice Almarai", 
+            "Pop Mie mix", "Zamzam 5 liter", "Kopi Baja Classic", "Gula Tropicana Slim"
+            // Tambahkan item populer lainnya di sini agar daftar tidak terlalu panjang bagi jamaah
+        ];
+
+        let selectedItems = [];
+
+        function renderItems() {
+            const container = document.getElementById('itemList');
+            container.innerHTML = ITEMS.map(item => `
+                <div onclick="toggleItem('${item}', this)" class="item-card bg-white p-5 rounded-2xl flex justify-between items-center cursor-pointer shadow-sm">
+                    <span class="font-bold text-slate-700 text-sm">${item}</span>
+                    <div class="check-icon hidden text-gold">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleItem(item, el) {
+            if (selectedItems.includes(item)) {
+                selectedItems = selectedItems.filter(i => i !== item);
+                el.classList.remove('selected');
+                el.querySelector('.check-icon').classList.add('hidden');
+            } else {
+                selectedItems.push(item);
+                el.classList.add('selected');
+                el.querySelector('.check-icon').classList.remove('hidden');
+            }
+        }
+
+        async function kirimPesanan() {
+            const noKamar = document.getElementById('noKamar').value;
+            const btn = document.getElementById('btnKirim');
+
+            if (!noKamar || selectedItems.length === 0) {
+                alert("Mohon pilih nomor kamar dan minimal satu item.");
+                return;
+            }
+
+            btn.innerText = "MENGIRIM...";
+            btn.disabled = true;
+
+            try {
+                // Mengirim data ke Apps Script (Logika POST yang sama dengan Dashboard)
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        noKamar: noKamar,
+                        status: "Perlu Refill",
+                        catatan: "PESANAN JAMAAH: " + selectedItems.join(", ")
+                    })
+                });
+                
+                document.getElementById('modalSuccess').classList.remove('hidden');
+            } catch (e) {
+                alert("Maaf, terjadi gangguan koneksi.");
+                btn.innerText = "PESAN SEKARANG";
+                btn.disabled = false;
+            }
+        }
+
+        renderItems();
+    </script>
+</body>
+</html>
