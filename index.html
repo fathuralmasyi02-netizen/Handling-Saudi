@@ -18,9 +18,12 @@
         .overlay.active { display: block; }
         .refill-alert { animation: pulse-red 1.5s infinite; border: 2px solid #ef4444 !important; background: #fff1f2 !important; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .loading-overlay { position: fixed; top: 20px; right: 20px; background: white; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; z-index: 5000; font-size: 12px; font-weight: 800; color: var(--gold); }
     </style>
 </head>
 <body class="min-h-screen">
+
+    <div id="silentLoading" class="loading-overlay italic">⏳ Menyelaraskan Data...</div>
 
     <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] bg-white p-3.5 rounded-2xl shadow-xl border border-slate-100">
         <svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -58,33 +61,42 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbw2B2qBjFpS6WklXnWmOEtP4h7wCLnrQVVlpYqooB2VjUQzVoi46-iw6lk37QeV8Cioug/exec";
         let appData = null;
+        let currentActiveSheet = "DASHBOARD";
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
 
-        async function init() {
+        async function init(isSilent = false) {
+            if(!isSilent) document.getElementById('dynamicContent').innerHTML = "<p class='font-bold text-slate-400 p-10'>Memuat Data...</p>";
+            else document.getElementById('silentLoading').style.display = "block";
+            
             try {
                 const res = await fetch(API_URL);
                 appData = await res.json();
-                renderDashboard();
+                document.getElementById('silentLoading').style.display = "none";
+                
+                // Kembali ke tampilan yang sedang dibuka sebelumnya
+                if(currentActiveSheet === "DASHBOARD") renderDashboard();
+                else changeSheet(currentActiveSheet, true);
             } catch (e) { console.error("Sync Error"); }
         }
 
         function renderDashboard() {
+            currentActiveSheet = "DASHBOARD";
             document.getElementById('pageTitle').innerText = "Dashboard";
             document.getElementById('filterContainer').classList.add('hidden');
             let html = ``;
             for (const name in appData) {
                 html += `<div onclick="changeSheet('${name}')" class="glass-card-light p-8 flex justify-between items-center cursor-pointer mb-4">
-                    <div class="text-left"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-slate-800">${appData[name].length} Item</h3></div>
+                    <div class="text-left"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-slate-800">${appData[name].length} Data</h3></div>
                     <div class="text-gold"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></div>
                 </div>`;
             }
             document.getElementById('dynamicContent').innerHTML = html;
         }
 
-        function changeSheet(name) {
+        function changeSheet(name, isRefresh = false) {
+            currentActiveSheet = name;
             document.getElementById('pageTitle').innerText = name;
-            const container = document.getElementById('dynamicContent');
             if (name === "LOGISTIK KAMAR") {
                 document.getElementById('filterContainer').classList.remove('hidden');
                 applyFilters();
@@ -94,10 +106,17 @@
             }
         }
 
-        // --- LOGIKA LOGISTIK KAMAR ---
         function applyFilters() {
             const search = document.getElementById('searchKamar').value.toLowerCase();
-            const filtered = appData["LOGISTIK KAMAR"].filter(r => r['Nomor Kamar'].toString().toLowerCase().includes(search));
+            const hotel = document.getElementById('filterHotel').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            
+            const filtered = appData["LOGISTIK KAMAR"].filter(r => {
+                const matchKamar = r['Nomor Kamar'].toString().toLowerCase().includes(search);
+                const matchHotel = !hotel || r['Hotel'].toString().toLowerCase().includes(hotel);
+                const matchStatus = !status || r['Status'] === status;
+                return matchKamar && matchHotel && matchStatus;
+            });
             renderLogistik(filtered);
         }
 
@@ -109,11 +128,10 @@
                      class="glass-card-light p-5 border-b-4 border-slate-100 ${row['Status'] === 'Perlu Refill' ? 'refill-alert' : ''} cursor-pointer text-left">
                     <p class="text-[8px] font-black text-gold uppercase">${row['Hotel']}</p>
                     <h3 class="text-xl font-black text-slate-800">Room ${row['Nomor Kamar']}</h3>
-                    <p class="mt-2 text-[9px] font-bold text-slate-400 uppercase truncate">${row['Catatan'] || row['Status']}</p>
+                    <p class="mt-2 text-[9px] font-bold text-slate-400 uppercase line-clamp-2">${row['Catatan'] || row['Status']}</p>
                 </div>`).join('');
         }
 
-        // --- LOGIKA PERLENGKAPAN TIM ---
         function renderPerlengkapan(rows) {
             const container = document.getElementById('dynamicContent');
             container.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
@@ -128,9 +146,36 @@
                 </div>`).join('');
         }
 
+        // --- FUNGSI SIMPAN LOGISTIK KAMAR ---
+        function openModalLogistik(noKamar, hotel, currentStatus, currentCatatan) {
+            const modalHtml = `<div id="modalBox" class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
+                <div class="glass-card-light w-full max-w-md p-6 bg-white z-[2001] text-left">
+                    <h2 class="text-xl font-black mb-1 uppercase">Room ${noKamar}</h2>
+                    <p class="text-[10px] font-bold text-gold uppercase mb-4">${hotel}</p>
+                    <select id="updateStatus" class="w-full p-4 bg-slate-50 border rounded-2xl mb-4 font-bold text-slate-800">
+                        <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>BELUM DIISI</option>
+                        <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>PROSES</option>
+                        <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>LENGKAP</option>
+                        <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>REFILL REQUIRED 🔴</option>
+                    </select>
+                    <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border rounded-2xl mb-4 text-sm" placeholder="Catatan...">${currentCatatan}</textarea>
+                    <button onclick="saveDataLogistik('${noKamar}')" id="btnSave" class="btn-gold w-full py-4 rounded-2xl font-black">SIMPAN PERUBAHAN</button>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        async function saveDataLogistik(noKamar) {
+            const btn = document.getElementById('btnSave'); btn.innerText = "SAVING..."; btn.disabled = true;
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ noKamar, status: document.getElementById('updateStatus').value, catatan: document.getElementById('updateCatatan').value }) });
+            closeModal();
+            init(true); // Update data tanpa reset tampilan
+        }
+
+        // --- FUNGSI SIMPAN PERLENGKAPAN ---
         function openModalBarang(nama, kategori, qty, status, keterangan) {
-            const modalHtml = `
-            <div id="modalBarang" class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+            const modalHtml = `<div id="modalBox" class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
                 <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
                 <div class="glass-card-light w-full max-w-md p-6 bg-white z-[2001] text-left">
                     <h2 class="text-xl font-black mb-4 uppercase">${nama}</h2>
@@ -139,19 +184,20 @@
                         <option value="Habis" ${status === 'Habis' ? 'selected' : ''}>HABIS / DIPAKAI</option>
                     </select>
                     <textarea id="updateKetBarang" class="w-full p-4 bg-slate-50 border rounded-2xl mb-4" placeholder="Keterangan...">${keterangan}</textarea>
-                    <button onclick="saveDataBarang('${nama}')" id="btnSave" class="btn-gold w-full py-4 rounded-2xl">UPDATE</button>
+                    <button onclick="saveDataBarang('${nama}')" id="btnSaveBarang" class="btn-gold w-full py-4 rounded-2xl font-black">UPDATE INVENTARIS</button>
                 </div>
             </div>`;
             document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
         async function saveDataBarang(nama) {
-            const btn = document.getElementById('btnSave'); btn.innerText = "SAVING...";
+            const btn = document.getElementById('btnSaveBarang'); btn.innerText = "SAVING..."; btn.disabled = true;
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "PERLENGKAPAN", namaBarang: nama, status: document.getElementById('updateStatusBarang').value, keterangan: document.getElementById('updateKetBarang').value }) });
-            location.reload();
+            closeModal();
+            init(true); // Update data tanpa reset tampilan
         }
 
-        function closeModal() { const m = document.getElementById('modalBarang'); if(m) m.remove(); }
+        function closeModal() { const m = document.getElementById('modalBox'); if(m) m.remove(); }
         init();
     </script>
 </body>
