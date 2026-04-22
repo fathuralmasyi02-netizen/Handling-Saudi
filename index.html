@@ -16,9 +16,9 @@
         }
         
         body {
-            /* Background menggunakan gambar bertema haji/mecca dengan overlay gelap */
-            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.85)), 
-                        url('https://images.unsplash.com/photo-1564769625905-50e93615e769?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+            /* Menggunakan Background yang Anda berikan dengan overlay premium */
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+                        url('https://lh3.googleusercontent.com/d/1Z1T7W1TGe8a3I0PCWwV9yWTwmto5YHNM') no-repeat center center fixed;
             background-size: cover; 
             font-family: var(--font-body); 
             color: #f8fafc;
@@ -52,20 +52,11 @@
         }
         #sidebar.active { left: 0; }
         
-        .nav-item {
-            border-left: 4px solid transparent;
-            transition: all 0.3s;
-        }
-        .nav-item:hover {
-            background: rgba(212, 175, 55, 0.1);
-            border-left: 4px solid var(--gold);
-        }
+        .nav-item { border-left: 4px solid transparent; transition: all 0.3s; }
+        .nav-item:hover { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
-
-        .item-scroll::-webkit-scrollbar { width: 5px; }
-        .item-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
         @keyframes pulse-gold {
             0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
@@ -83,8 +74,8 @@
 
     <div id="sidebar" class="flex flex-col shadow-2xl">
         <div class="p-8 flex flex-col items-center border-b border-white/10">
-            <img src="https://jejakimani.com/assets/img/logo-ji.png" alt="Logo" class="h-16 mb-4 filter brightness-0 invert">
-            <h2 style="font-family: var(--font-header);" class="gold-gradient font-black uppercase text-xs text-center tracking-widest">Operational<br>Haji 2026</h2>
+            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Logo" class="h-20 mb-4 object-contain">
+            <h2 style="font-family: var(--font-header);" class="gold-gradient font-black uppercase text-[10px] text-center tracking-widest leading-tight">Operational<br>Haji 2026</h2>
         </div>
         <nav class="p-4 space-y-2">
             <button onclick="showDashboard(); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-white uppercase tracking-widest flex items-center gap-3">
@@ -93,13 +84,13 @@
             <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-gray-400 hover:text-white uppercase tracking-widest flex items-center gap-3">
                 <span>📦</span> Logistik Kamar
             </button>
-            </nav>
+        </nav>
     </div>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="max-w-4xl mx-auto px-4 pt-24 pb-24 text-center">
         <div class="flex justify-center mb-6">
-            <img src="https://jejakimani.com/assets/img/logo-ji.png" alt="Jejak Imani" class="h-12 object-contain filter brightness-0 invert opacity-80">
+            <img src="https://lh3.googleusercontent.com/d/1eExbKZKwfOh58br_Jr6D71uqe-2Rue5r" alt="Jejak Imani" class="h-16 object-contain">
         </div>
 
         <h1 id="pageTitle" class="text-4xl font-black uppercase italic tracking-tighter gold-gradient mb-2" style="font-family: var(--font-header);">Dashboard</h1>
@@ -107,8 +98,7 @@
             Sistem Terkoneksi
         </div>
 
-        <div id="dynamicContent" class="grid grid-cols-1 gap-6">
-            </div>
+        <div id="dynamicContent" class="grid grid-cols-1 gap-6"></div>
     </div>
 
     <script>
@@ -175,17 +165,16 @@
             rows.forEach(row => {
                 let statusStyle = "";
                 let statusText = row['Status'] || "Pending";
-                
                 if(row['Status'] === "Perlu Refill") statusStyle = "refill-alert";
                 if(row['Status'] === "Lengkap") statusStyle = "border-green-400 bg-green-50/30";
 
                 html += `
                 <div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status']}', '${row['Catatan']}')" 
-                     class="glass-card p-5 border-t-4 border-slate-200 ${statusStyle} cursor-pointer active:scale-95 transition-all">
+                     class="glass-card p-5 border-t-4 border-slate-200 ${statusStyle} cursor-pointer active:scale-95 transition-all text-left">
                     <p class="text-[9px] font-extrabold text-gold uppercase tracking-wider mb-1">${row['Hotel']}</p>
                     <h3 class="text-xl font-black text-slate-800 leading-tight">Room ${row['Nomor Kamar']}</h3>
                     <div class="mt-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <span class="w-2 h-2 rounded-full ${row['Status'] === 'Perlu Refill' ? 'bg-red-500' : 'bg-slate-400'}"></span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase">${statusText}</p>
                     </div>
                 </div>`;
@@ -200,18 +189,15 @@
                 <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp" style="border: 2px solid var(--gold)">
                     <div class="p-6 btn-gold flex justify-between items-center shadow-lg">
                         <div class="text-left text-navy">
-                            <h2 class="text-2xl font-black italic tracking-tighter" style="font-family: var(--font-header);">UNIT ${noKamar}</h2>
+                            <h2 class="text-2xl font-black italic tracking-tighter" style="font-family: var(--font-header);">ROOM ${noKamar}</h2>
                             <p class="text-[10px] font-bold uppercase tracking-widest">${hotel}</p>
                         </div>
                         <button onclick="closeModal()" class="h-10 w-10 bg-navy/10 rounded-full text-2xl font-black">×</button>
                     </div>
                     <div class="p-6 overflow-y-auto bg-white text-left space-y-6">
                         <div>
-                            <div class="flex justify-between items-center mb-3">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SOP Checklist (41 Items)</label>
-                                <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">41 ITEMS</span>
-                            </div>
-                            <div class="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto p-3 bg-slate-50 rounded-2xl item-scroll border border-slate-100">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">SOP Checklist</label>
+                            <div class="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto p-3 bg-slate-50 rounded-2xl border border-slate-100">
                                 ${SOP_ITEMS.map(item => `
                                     <label class="flex items-center gap-3 p-3 hover:bg-white rounded-xl transition-all cursor-pointer border border-transparent hover:border-gold/20">
                                         <input type="checkbox" class="w-5 h-5 rounded border-slate-300 text-gold focus:ring-gold">
@@ -220,23 +206,18 @@
                                 `).join('')}
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 gap-4">
-                            <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Status Progres</label>
-                                <select id="updateStatus" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-extrabold text-navy outline-none focus:border-gold">
-                                    <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>BELUM DIISI</option>
-                                    <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>DALAM PROSES</option>
-                                    <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>LENGKAP (SOP)</option>
-                                    <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>REFILL REQUIRED 🔴</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Catatan Operasional</label>
-                                <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-semibold outline-none focus:border-gold" rows="2" placeholder="Contoh: Kurang madu 2 box...">${currentCatatan}</textarea>
-                            </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Status & Catatan</label>
+                            <select id="updateStatus" class="w-full mb-3 p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-extrabold text-navy outline-none focus:border-gold">
+                                <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>BELUM DIISI</option>
+                                <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>DALAM PROSES</option>
+                                <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>LENGKAP (SOP)</option>
+                                <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>REFILL REQUIRED 🔴</option>
+                            </select>
+                            <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-semibold outline-none focus:border-gold" rows="2" placeholder="Catatan...">${currentCatatan}</textarea>
                         </div>
                         <button id="btnSimpan" onclick="saveData('${noKamar}')" class="btn-gold w-full py-5 rounded-2xl shadow-xl active:scale-95 transition-all text-sm tracking-[0.2em]">
-                            KONFIRMASI UPDATE
+                            SIMPAN PERUBAHAN
                         </button>
                     </div>
                 </div>
@@ -247,23 +228,17 @@
         async function saveData(noKamar) {
             const btn = document.getElementById('btnSimpan');
             btn.innerText = "SYNCHRONIZING..."; btn.disabled = true;
-            const status = document.getElementById('updateStatus').value;
-            const catatan = document.getElementById('updateCatatan').value;
-            
             try {
                 await fetch(API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan })
+                    body: JSON.stringify({ noKamar: noKamar, status: document.getElementById('updateStatus').value, catatan: document.getElementById('updateCatatan').value })
                 });
-                closeModal();
-                init();
+                closeModal(); init();
             } catch (e) { alert("Update Gagal!"); }
         }
 
         function closeModal() { const m = document.getElementById('modalLogistik'); if(m) m.remove(); }
-        function showDashboard() { renderDashboard(); }
-        
         init();
     </script>
 </body>
