@@ -3,64 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handling Haji Jejak Imani 2026</title>
+    <title>Operational Jejak Imani 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@900&family=Mulish:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Martel:wght@700;900&family=Mulish:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --font-header: 'Martel', serif; --font-body: 'Mulish', sans-serif; }
-        body {
-            background: #0f172a linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
-                        url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover; font-family: var(--font-body); color: #f8fafc;
+        :root { 
+            --gold: #d4af37; 
+            --gold-light: #f1d592;
+            --navy: #0f172a;
+            --font-header: 'Martel', serif; 
+            --font-body: 'Mulish', sans-serif; 
         }
-        .glass-card { background: rgba(255, 255, 255, 0.98); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: #1e293b; }
-        #sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1001; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #1e293b; }
+        
+        body {
+            /* Background menggunakan gambar bertema haji/mecca dengan overlay gelap */
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.85)), 
+                        url('https://images.unsplash.com/photo-1564769625905-50e93615e769?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover; 
+            font-family: var(--font-body); 
+            color: #f8fafc;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f1d592 50%, #b8860b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.95); 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            color: var(--navy);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: var(--navy);
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+        }
+
+        #sidebar { 
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100%; 
+            background: var(--navy); border-right: 2px solid var(--gold);
+            z-index: 1001; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
         #sidebar.active { left: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; }
+        
+        .nav-item {
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        .nav-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold);
+        }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .animate-slideUp { animation: slideUp 0.3s ease-out; }
+
+        .item-scroll::-webkit-scrollbar { width: 5px; }
+        .item-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+        .refill-alert { animation: pulse-gold 2s infinite; border: 2px solid #ef4444 !important; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] bg-yellow-500 text-blue-950 p-3 rounded-full shadow-2xl active:scale-90 transition-transform">
+    <button onclick="toggleSidebar()" class="fixed top-6 left-6 z-[1002] btn-gold p-3 rounded-xl shadow-2xl active:scale-90 transition-transform">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
     </button>
 
     <div id="sidebar" class="flex flex-col shadow-2xl">
-        <div class="p-8 flex flex-col items-center border-b border-gray-100">
-            <h2 style="font-family: var(--font-header);" class="text-blue-900 font-black uppercase text-xs text-center tracking-tighter">Jejak Imani<br>Operational</h2>
+        <div class="p-8 flex flex-col items-center border-b border-white/10">
+            <img src="https://jejakimani.com/assets/img/logo-ji.png" alt="Logo" class="h-16 mb-4 filter brightness-0 invert">
+            <h2 style="font-family: var(--font-header);" class="gold-gradient font-black uppercase text-xs text-center tracking-widest">Operational<br>Haji 2026</h2>
         </div>
-        <div class="p-3 space-y-1 overflow-y-auto">
-            <button onclick="showDashboard(); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs text-blue-900 uppercase tracking-widest">🏠 Dashboard</button>
-            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="w-full text-left p-4 rounded-lg hover:bg-gray-100 font-bold text-xs text-gray-600 uppercase tracking-widest">📦 Logistik Kamar</button>
-        </div>
+        <nav class="p-4 space-y-2">
+            <button onclick="showDashboard(); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-white uppercase tracking-widest flex items-center gap-3">
+                <span>🏠</span> Dashboard
+            </button>
+            <button onclick="changeSheet('LOGISTIK KAMAR'); toggleSidebar()" class="nav-item w-full text-left p-4 rounded-xl font-bold text-xs text-gray-400 hover:text-white uppercase tracking-widest flex items-center gap-3">
+                <span>📦</span> Logistik Kamar
+            </button>
+            </nav>
     </div>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="max-w-4xl mx-auto px-4 pt-24 pb-24 text-center">
-        <h1 id="pageTitle" class="text-3xl font-black uppercase italic tracking-tighter text-white mb-2" style="font-family: var(--font-header);">Dashboard</h1>
-        <div id="statusBadge" class="inline-block mb-8 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-yellow-400">Syncing...</div>
-
-        <div id="filterBar" class="hidden space-y-3 mb-8">
-            <div class="flex gap-2">
-                <input type="text" id="searchKamar" oninput="applyFilters()" placeholder="No. Kamar..." class="flex-1 p-4 rounded-2xl bg-white text-blue-900 font-bold text-sm shadow-xl outline-none">
-                <select id="filterStatus" onchange="applyFilters()" class="p-4 rounded-2xl bg-white text-blue-900 font-bold text-xs shadow-xl outline-none border-none">
-                    <option value="">Semua Status</option>
-                    <option value="Belum">Belum</option>
-                    <option value="Proses">Proses</option>
-                    <option value="Lengkap">Lengkap</option>
-                    <option value="Perlu Refill">Perlu Refill 🔴</option>
-                </select>
-            </div>
+        <div class="flex justify-center mb-6">
+            <img src="https://jejakimani.com/assets/img/logo-ji.png" alt="Jejak Imani" class="h-12 object-contain filter brightness-0 invert opacity-80">
         </div>
 
-        <div id="dynamicContent" class="grid grid-cols-1 gap-4"></div>
+        <h1 id="pageTitle" class="text-4xl font-black uppercase italic tracking-tighter gold-gradient mb-2" style="font-family: var(--font-header);">Dashboard</h1>
+        <div id="statusBadge" class="inline-block mb-8 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-light">
+            Sistem Terkoneksi
+        </div>
+
+        <div id="dynamicContent" class="grid grid-cols-1 gap-6">
+            </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyIvXmJMUsKDkQASjwdacvOgi6B8WRy_w3qePVlnNEUkoGaiVA8cJ31uRg_frJ7ugVQ5w/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbykKKCG1rbdY_DIoOVzCbC33RzdCBdMElQfDQEkk8pAo6ziZWwFdeFz-_15cTGlK4vLzA/exec"; 
         const SOP_ITEMS = [
             "Ajwa Almadina Malaki", "Alkhair Chai Karak Cardamom teh tarik", "Alkhair Chai Karak Ginger", "Amada Cokelat Mood Dark",
             "Baja Cashew", "Baja Deluxe Mix", "Baja Extra Mix", "Baja Peanuts", "Baja Sweet & Salty Mix", "Basket Fruits",
@@ -75,103 +127,117 @@
 
         let appData = null;
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
+        function toggleSidebar() { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+            document.querySelector('.overlay').classList.toggle('active'); 
+        }
 
         async function init() {
             try {
                 const res = await fetch(API_URL);
                 appData = await res.json();
-                document.getElementById('statusBadge').innerText = "Data Live Sync";
-                document.getElementById('statusBadge').className = "inline-block mb-8 px-3 py-1 bg-green-500/20 rounded-full text-[10px] font-bold uppercase tracking-widest text-green-400";
-                showDashboard();
-            } catch (e) { document.getElementById('statusBadge').innerText = "Koneksi Error"; }
+                renderDashboard();
+            } catch (e) { console.error("Koneksi Gagal"); }
         }
 
-        function showDashboard() {
-            document.getElementById('pageTitle').innerText = "Dashboard";
-            document.getElementById('filterBar').classList.add('hidden');
+        function renderDashboard() {
+            const container = document.getElementById('dynamicContent');
+            container.className = "grid grid-cols-1 gap-6";
             let html = ``;
             for (const name in appData) {
-                html += `<div onclick="changeSheet('${name}')" class="glass-card p-6 flex justify-between items-center cursor-pointer active:scale-95 transition-transform">
-                    <div class="text-left"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${name}</p><h3 class="text-2xl font-black text-blue-900">${appData[name].length} Data</h3></div>
-                    <div class="text-blue-900"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+                html += `
+                <div onclick="changeSheet('${name}')" class="glass-card p-8 flex justify-between items-center cursor-pointer transition-all hover:translate-y-[-5px]">
+                    <div class="text-left">
+                        <p class="text-[10px] font-extrabold text-gold uppercase tracking-[0.3em] mb-1">${name}</p>
+                        <h3 class="text-3xl font-black text-slate-800">${appData[name].length} <span class="text-sm font-normal text-slate-400 uppercase tracking-widest">Records</span></h3>
+                    </div>
+                    <div class="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-gold">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
                 </div>`;
             }
-            document.getElementById('dynamicContent').innerHTML = html;
+            container.innerHTML = html;
         }
 
         function changeSheet(name) {
             document.getElementById('pageTitle').innerText = name;
             if (name === "LOGISTIK KAMAR") {
-                document.getElementById('filterBar').classList.remove('hidden');
-                applyFilters();
+                renderLogistikGrid(appData[name]);
             } else {
-                document.getElementById('filterBar').classList.add('hidden');
                 renderDefaultTable(appData[name]);
             }
         }
 
-        function applyFilters() {
-            const query = document.getElementById('searchKamar').value.toLowerCase();
-            const status = document.getElementById('filterStatus').value;
-            const filtered = appData["LOGISTIK KAMAR"].filter(r => {
-                const matchKamar = r['Nomor Kamar'].toString().toLowerCase().includes(query);
-                const matchStatus = !status || r['Status'] === status;
-                return matchKamar && matchStatus;
-            });
-            renderLogistikGrid(filtered);
-        }
-
         function renderLogistikGrid(rows) {
-            let html = `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">`;
+            const container = document.getElementById('dynamicContent');
+            container.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
+            let html = ``;
             rows.forEach(row => {
-                let bgColor = "bg-white";
-                if(row['Status'] === "Perlu Refill") bgColor = "bg-red-50 border-red-500 animate-pulse";
-                else if(row['Status'] === "Lengkap") bgColor = "bg-green-50 border-green-500";
+                let statusStyle = "";
+                let statusText = row['Status'] || "Pending";
+                
+                if(row['Status'] === "Perlu Refill") statusStyle = "refill-alert";
+                if(row['Status'] === "Lengkap") statusStyle = "border-green-400 bg-green-50/30";
 
-                html += `<div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status']}', '${row['Catatan']}')" 
-                     class="glass-card p-4 border-2 ${bgColor} cursor-pointer active:scale-95 transition-all text-left">
-                    <p class="text-[8px] font-bold text-blue-400 uppercase">${row['Hotel']}</p>
-                    <h3 class="text-lg font-black text-blue-900">Kamar ${row['Nomor Kamar']}</h3>
-                    <p class="text-[9px] text-gray-400 mt-2 font-bold uppercase">${row['Status'] || 'Pending'}</p>
+                html += `
+                <div onclick="openModalLogistik('${row['Nomor Kamar']}', '${row['Hotel']}', '${row['Status']}', '${row['Catatan']}')" 
+                     class="glass-card p-5 border-t-4 border-slate-200 ${statusStyle} cursor-pointer active:scale-95 transition-all">
+                    <p class="text-[9px] font-extrabold text-gold uppercase tracking-wider mb-1">${row['Hotel']}</p>
+                    <h3 class="text-xl font-black text-slate-800 leading-tight">Room ${row['Nomor Kamar']}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase">${statusText}</p>
+                    </div>
                 </div>`;
             });
-            document.getElementById('dynamicContent').innerHTML = html + `</div>`;
+            container.innerHTML = html;
         }
 
         function openModalLogistik(noKamar, hotel, currentStatus, currentCatatan) {
             const modalHtml = `
             <div id="modalLogistik" class="fixed inset-0 z-[2000] flex items-end md:items-center justify-center p-4">
-                <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-                <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp">
-                    <div class="p-6 bg-blue-900 text-white flex justify-between items-center">
-                        <div class="text-left"><h2 class="text-xl font-black italic">Kamar ${noKamar}</h2><p class="text-[10px] uppercase opacity-70">${hotel}</p></div>
-                        <button onclick="closeModal()" class="text-2xl font-bold">×</button>
+                <div class="fixed inset-0 bg-navy/90 backdrop-blur-md" onclick="closeModal()"></div>
+                <div class="glass-card w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col z-[2001] animate-slideUp" style="border: 2px solid var(--gold)">
+                    <div class="p-6 btn-gold flex justify-between items-center shadow-lg">
+                        <div class="text-left text-navy">
+                            <h2 class="text-2xl font-black italic tracking-tighter" style="font-family: var(--font-header);">UNIT ${noKamar}</h2>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">${hotel}</p>
+                        </div>
+                        <button onclick="closeModal()" class="h-10 w-10 bg-navy/10 rounded-full text-2xl font-black">×</button>
                     </div>
-                    <div class="p-6 overflow-y-auto bg-white text-left space-y-4">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">SOP Checklist (41 Item)</p>
-                        <div class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 rounded-xl">
-                            ${SOP_ITEMS.map(item => `
-                                <label class="flex items-center gap-3 p-2 hover:bg-white rounded transition-colors">
-                                    <input type="checkbox" class="w-4 h-4 rounded text-blue-900 border-gray-300">
-                                    <span class="text-[11px] font-bold text-gray-700">${item}</span>
-                                </label>
-                            `).join('')}
-                        </div>
+                    <div class="p-6 overflow-y-auto bg-white text-left space-y-6">
                         <div>
-                            <label class="text-[10px] font-black text-gray-400 uppercase">Update Status</label>
-                            <select id="updateStatus" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl font-bold text-blue-900">
-                                <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Diisi</option>
-                                <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>Dalam Proses</option>
-                                <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>Lengkap (Sesuai SOP)</option>
-                                <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>Perlu Refill 🔴</option>
-                            </select>
+                            <div class="flex justify-between items-center mb-3">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SOP Checklist (41 Items)</label>
+                                <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">41 ITEMS</span>
+                            </div>
+                            <div class="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto p-3 bg-slate-50 rounded-2xl item-scroll border border-slate-100">
+                                ${SOP_ITEMS.map(item => `
+                                    <label class="flex items-center gap-3 p-3 hover:bg-white rounded-xl transition-all cursor-pointer border border-transparent hover:border-gold/20">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-slate-300 text-gold focus:ring-gold">
+                                        <span class="text-[11px] font-bold text-slate-700">${item}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black text-gray-400 uppercase">Catatan</label>
-                            <textarea id="updateCatatan" class="w-full mt-1 p-3 bg-gray-100 border rounded-xl text-xs" rows="2">${currentCatatan}</textarea>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Status Progres</label>
+                                <select id="updateStatus" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-extrabold text-navy outline-none focus:border-gold">
+                                    <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>BELUM DIISI</option>
+                                    <option value="Proses" ${currentStatus === 'Proses' ? 'selected' : ''}>DALAM PROSES</option>
+                                    <option value="Lengkap" ${currentStatus === 'Lengkap' ? 'selected' : ''}>LENGKAP (SOP)</option>
+                                    <option value="Perlu Refill" ${currentStatus === 'Perlu Refill' ? 'selected' : ''}>REFILL REQUIRED 🔴</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Catatan Operasional</label>
+                                <textarea id="updateCatatan" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-semibold outline-none focus:border-gold" rows="2" placeholder="Contoh: Kurang madu 2 box...">${currentCatatan}</textarea>
+                            </div>
                         </div>
-                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="w-full py-4 bg-yellow-500 text-blue-950 font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all">SIMPAN PERUBAHAN</button>
+                        <button id="btnSimpan" onclick="saveData('${noKamar}')" class="btn-gold w-full py-5 rounded-2xl shadow-xl active:scale-95 transition-all text-sm tracking-[0.2em]">
+                            KONFIRMASI UPDATE
+                        </button>
                     </div>
                 </div>
             </div>`;
@@ -180,16 +246,24 @@
 
         async function saveData(noKamar) {
             const btn = document.getElementById('btnSimpan');
+            btn.innerText = "SYNCHRONIZING..."; btn.disabled = true;
             const status = document.getElementById('updateStatus').value;
             const catatan = document.getElementById('updateCatatan').value;
-            btn.innerText = "MENGIRIM..."; btn.disabled = true;
+            
             try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan }) });
-                alert("Berhasil!"); closeModal(); init();
-            } catch (e) { alert("Gagal kirim"); } finally { btn.innerText = "SIMPAN PERUBAHAN"; btn.disabled = false; }
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ noKamar: noKamar, status: status, catatan: catatan })
+                });
+                closeModal();
+                init();
+            } catch (e) { alert("Update Gagal!"); }
         }
 
         function closeModal() { const m = document.getElementById('modalLogistik'); if(m) m.remove(); }
+        function showDashboard() { renderDashboard(); }
+        
         init();
     </script>
 </body>
